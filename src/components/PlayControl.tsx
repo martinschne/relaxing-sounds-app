@@ -2,12 +2,11 @@ import { IonIcon, IonImg, IonItem, IonLabel, IonThumbnail } from "@ionic/react";
 import { pauseOutline, playOutline } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import { Media, MediaObject } from "@awesome-cordova-plugins/media";
-import { BackgroundMode } from "@awesome-cordova-plugins/background-mode";
 import { Capacitor } from "@capacitor/core";
-import { getPath } from "../util/getPath";
+import { getNativePublicPath } from "../utils/pathUtils";
 
 interface PlayControlProps {
-  id: string;
+  id?: string;
   name?: string;
   image?: string;
   artist?: string;
@@ -27,28 +26,21 @@ const PlayControl: React.FC<PlayControlProps> = ({
 
   const [isPlaying, setIsPlaying] = useState<Boolean>(false);
   const [isInitialized, setIsInitialized] = useState<Boolean>(false);
-  const [isCleanupDone, setIsCleanupDone] = useState<Boolean>(false);
   const [isPausedByUser, setIsPausedByUser] = useState<Boolean>(false);
 
   const initializeAudio = async () => {
-    if (!isCleanupDone) return;
-
-    // web path
-    const songURI: string = `/assets/music/${source}`;
+    const songPath: string = `/assets/music/${source}`;
 
     if (Capacitor.isNativePlatform()) {
-      // prepare background mode for native platforms
-      BackgroundMode.enable();
-
       // Cleanup previous media object if it exists
       if (songMediaObjectRef.current) {
         songMediaObjectRef.current.stop();
         songMediaObjectRef.current.release();
-        songMediaObjectRef.current = null;
+        songMediaObjectRef.current = null; // exp
       }
       try {
-        const nativeFilePath = getPath(songURI);
-        songMediaObjectRef.current = Media.create(nativeFilePath);
+        const nativePath = getNativePublicPath(songPath);
+        songMediaObjectRef.current = Media.create(nativePath);
 
         // restart audio when it ends automatically
         statusUpdateSubscription.current =
@@ -59,10 +51,12 @@ const PlayControl: React.FC<PlayControlProps> = ({
           });
 
         setTimeout(() => {
-          songMediaObjectRef.current?.play();
-          setIsPlaying(true);
-          setIsInitialized(true);
+          if (id !== "0") {
+            setIsPlaying(true);
+            songMediaObjectRef.current?.play();
+          }
         }, 500);
+        setIsInitialized(true);
       } catch (error) {
         console.error("Error initializing media: ", error);
       }
@@ -76,10 +70,12 @@ const PlayControl: React.FC<PlayControlProps> = ({
       }
 
       try {
-        songAudioElementRef.current = new Audio(songURI);
+        songAudioElementRef.current = new Audio(songPath);
         songAudioElementRef.current.loop = true;
-        await songAudioElementRef.current.play();
-        setIsPlaying(true);
+        if (id !== "0") {
+          setIsPlaying(true);
+          await songAudioElementRef.current.play();
+        }
         setIsInitialized(true);
       } catch (error) {
         console.error("Error playing audio:", error);
@@ -92,8 +88,6 @@ const PlayControl: React.FC<PlayControlProps> = ({
     initializeAudio();
 
     return () => {
-      setIsCleanupDone(true);
-
       if (Capacitor.isNativePlatform()) {
         if (statusUpdateSubscription.current) {
           statusUpdateSubscription.current.unsubscribe();
@@ -117,6 +111,8 @@ const PlayControl: React.FC<PlayControlProps> = ({
   }, [id, source]);
 
   const handlePlayClick = async () => {
+    setIsPlaying(true);
+
     if (!isInitialized) {
       await initializeAudio();
     }
@@ -125,17 +121,17 @@ const PlayControl: React.FC<PlayControlProps> = ({
     } else {
       await songAudioElementRef.current?.play();
     }
-    setIsPlaying(true);
   };
 
   const handlePauseClick = () => {
+    setIsPlaying(false);
+
     if (Capacitor.isNativePlatform()) {
       setIsPausedByUser(true);
       songMediaObjectRef.current?.pause();
     } else {
       songAudioElementRef.current?.pause();
     }
-    setIsPlaying(false);
   };
 
   return (

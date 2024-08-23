@@ -11,18 +11,51 @@ import {
 import "./MusicPage.css";
 import { Song, songs } from "../data/songs";
 import SongCard from "../components/SongCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PlayControl from "../components/PlayControl";
 import { v4 as uuidv4 } from "uuid";
+import StorageService from "../services/StorageService";
+import {
+  loadPreference,
+  PreferenceKeys,
+  savePreference,
+} from "../utils/preferencesUtils";
 
 const MusicPage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [filteredSongs, setFilteredSongs] = useState(
     JSON.parse(JSON.stringify(songs))
   );
-  const [selectedSong, setSelectedSong] = useState<Song>(
-    JSON.parse(JSON.stringify(filteredSongs[0]))
-  );
+
+  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
+
+  useEffect(() => {
+    const loadSelectedSong = async () => {
+      // Load the saved selected song from storage when the app starts
+
+      const savedSong: Song | null = await loadPreference<Song>(
+        PreferenceKeys.SELECTED_SONG
+      );
+      if (savedSong) {
+        savedSong.id = "0"; // set as preselected song (don't play)
+        setSelectedSong(savedSong);
+      } else {
+        // no previously set song, preselect 1st one
+        const preselected = filteredSongs[0];
+        preselected.id = "0";
+        setSelectedSong(preselected);
+      }
+    };
+
+    loadSelectedSong();
+  }, []);
+
+  useEffect(() => {
+    // Save the selected song whenever it changes
+    if (selectedSong && selectedSong.id !== "0") {
+      savePreference<Song>(PreferenceKeys.SELECTED_SONG, selectedSong);
+    }
+  }, [selectedSong]);
 
   const handleSearch = (event: CustomEvent) => {
     const query = event.detail.value!.toLowerCase();
@@ -73,7 +106,7 @@ const MusicPage: React.FC = () => {
       </IonContent>
 
       <IonFooter translucent={true}>
-        <PlayControl {...selectedSong} />
+        <PlayControl id="0" {...selectedSong} />
       </IonFooter>
     </IonPage>
   );

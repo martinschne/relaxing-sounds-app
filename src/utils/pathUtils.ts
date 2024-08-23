@@ -1,6 +1,6 @@
 import { Capacitor } from "@capacitor/core";
 
-export const getPath = (webPath: string) => {
+export const getNativePublicPath = (webPath: string) => {
   if (Capacitor.isNativePlatform()) {
     return `file:///android_asset/public${webPath}`;
   }
