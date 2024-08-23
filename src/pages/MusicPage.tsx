@@ -20,7 +20,9 @@ const MusicPage: React.FC = () => {
   const [filteredSongs, setFilteredSongs] = useState(
     JSON.parse(JSON.stringify(songs))
   );
-  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
+  const [selectedSong, setSelectedSong] = useState<Song>(
+    JSON.parse(JSON.stringify(filteredSongs[0]))
+  );
 
   const handleSearch = (event: CustomEvent) => {
     const query = event.detail.value!.toLowerCase();
@@ -42,8 +44,6 @@ const MusicPage: React.FC = () => {
     selected.id = uuidv4(); // add new id to trigger component refresh
     setSelectedSong(selected);
   };
-
-  const songWasSelected = selectedSong !== null;
 
   return (
     <IonPage>
@@ -72,11 +72,9 @@ const MusicPage: React.FC = () => {
         </IonList>
       </IonContent>
 
-      {songWasSelected && (
-        <IonFooter translucent={true}>
-          <PlayControl {...selectedSong} />
-        </IonFooter>
-      )}
+      <IonFooter translucent={true}>
+        <PlayControl {...selectedSong} />
+      </IonFooter>
     </IonPage>
   );
 };

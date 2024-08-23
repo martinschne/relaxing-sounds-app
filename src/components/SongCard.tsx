@@ -10,7 +10,7 @@ import {
 } from "@ionic/react";
 import { Song } from "../data/songs";
 import { ellipsisHorizontalOutline } from "ionicons/icons";
-import { useRef, useState } from "react";
+import { MouseEventHandler, useRef, useState } from "react";
 
 export interface SongCardProps {
   song: Song;
@@ -21,8 +21,10 @@ const SongCard: React.FC<SongCardProps> = ({ song, onSelect }) => {
   const actionsPopover = useRef<HTMLIonPopoverElement>(null);
   const [actionsPopoverOpen, setActionsPopoverOpen] = useState(false);
 
-  const openActionsPopover = (e: any) => {
-    actionsPopover.current!.event = e;
+  const openActionsPopover = (
+    event: React.MouseEvent<HTMLIonIconElement, MouseEvent>
+  ) => {
+    actionsPopover.current!.event = event;
     setActionsPopoverOpen(true);
   };
 
