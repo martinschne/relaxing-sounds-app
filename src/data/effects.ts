@@ -1,0 +1,70 @@
+import { v4 as uuidv4 } from "uuid";
+import { Song } from "./songs";
+import {
+  cc_by_4_0_international,
+  cc_by_3_0,
+  cc_1_0_universal,
+} from "./licenses";
+
+export const effects: Song[] = [
+  {
+    id: uuidv4(),
+    name: "Heavy Rain",
+    artist: "Inchadney",
+    image: "heavy-rain.jpg",
+    source: "104391-inchadney--heavy-rain.mp3",
+    tags: ["rain", "heavy"],
+    description: "Soothing sound of heavy rain",
+    license: cc_by_4_0_international,
+  },
+  {
+    id: uuidv4(),
+    name: "Crickets",
+    artist: "Inchadney",
+    image: "cricket.jpg",
+    source: "124700-inchadney--crickets.mp3",
+    tags: ["insect", "crickets", "nature"],
+    description: "Natural cricket sound for relax or sleeping",
+    license: cc_by_4_0_international,
+  },
+  {
+    id: uuidv4(),
+    name: "Early Morning Birds",
+    artist: "Aladar",
+    image: "singing-bird.jpg",
+    source: "511758-aladar--early-morning-birds.mp3",
+    tags: ["birds", "morning", "meditation", "relax"],
+    description: "Beautiful morning serenade of various birds",
+    license: cc_by_3_0,
+  },
+  {
+    id: uuidv4(),
+    name: "Ocean Waves",
+    artist: "Joozz",
+    image: "ocean-waves.jpg",
+    source: "531950-joozz--waves-ocean.mp3",
+    tags: ["water", "ocean", "waves", "sleep", "meditation"],
+    description: "Calming ocean waves for great sleep and meditation",
+    license: cc_by_4_0_international,
+  },
+  {
+    id: uuidv4(),
+    name: "Fountain Babbling",
+    artist: "CheatinSloth",
+    image: "fountain-babbling.jpg",
+    source: "738777-cheatinsloth--fountain-babbling.mp3",
+    tags: ["water", "fountain", "babble", "relax"],
+    description: "Babbling fountain nurture for your ears",
+    license: cc_1_0_universal,
+  },
+  {
+    id: uuidv4(),
+    name: "Crackling Fire",
+    artist: "Universifield",
+    image: "fire-crackling.jpg",
+    source: "750241-universfield--crackling-fire.mp3",
+    tags: ["fire", "crackling", "evening", "sleep"],
+    description: "Crackling fire best masking sound",
+    license: cc_1_0_universal,
+  },
+];

@@ -5,24 +5,60 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import "./EffectsPage.css";
+import { Song } from "../data/songs";
+import { effects } from "../data/effects";
+import { useState } from "react";
+import { SearchBar } from "../components/SearchBar";
+import { PreferenceKeys } from "../utils/preferencesUtils";
+import { IonFooter } from "@ionic/react";
+import PlayList from "../components/PlayList";
+import PlayControl from "../components/PlayControl";
 
 const EffectsPage: React.FC = () => {
+  const ASSETS_EFFECTS_PATH = "/assets/effects/";
+  const EFFECTS_SEARCH_PLACEHOLDER = "Search by name, description or tag";
+  const [filteredEffects, setFilteredEffects] = useState(
+    JSON.parse(JSON.stringify(effects))
+  );
+  const [selectedEffect, setSelectedEffect] = useState<Song | null>(null);
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonTitle>Effects</IonTitle>
         </IonToolbar>
+        <IonToolbar>
+          <SearchBar
+            songs={effects}
+            setFilteredSongs={setFilteredEffects}
+            searchPlaceHolder={EFFECTS_SEARCH_PLACEHOLDER}
+          />
+        </IonToolbar>
       </IonHeader>
+
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle size="large">Effects</IonTitle>
           </IonToolbar>
         </IonHeader>
-        {/* main content */}
+        <PlayList
+          filteredSongs={filteredEffects}
+          selectedSong={selectedEffect}
+          setSelectedSong={setSelectedEffect}
+          preferenceKey={PreferenceKeys.SELECTED_EFFECT}
+        />
       </IonContent>
+
+      <IonFooter translucent={true}>
+        <PlayControl
+          id="0"
+          path={ASSETS_EFFECTS_PATH}
+          type="effect"
+          {...selectedEffect}
+        />
+      </IonFooter>
     </IonPage>
   );
 };

@@ -2,7 +2,9 @@ import { Preferences } from "@capacitor/preferences";
 
 export enum PreferenceKeys {
   SELECTED_SONG = "selectedSong",
-  // Add more keys as needed
+  SELECTED_EFFECT = "selectedEffect",
+  SONG_VOLUME_PERCENTAGE = "songVolumePercentage",
+  EFFECT_VOLUME_PERCENTAGE = "effectVolumePercentage",
 }
 
 export const savePreference = async <T>(key: string, val: T): Promise<void> => {

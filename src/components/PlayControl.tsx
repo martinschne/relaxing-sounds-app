@@ -4,13 +4,20 @@ import { useEffect, useRef, useState } from "react";
 import { Media, MediaObject } from "@awesome-cordova-plugins/media";
 import { Capacitor } from "@capacitor/core";
 import { getNativePublicPath } from "../utils/pathUtils";
+import { useAudioContext } from "../contexts/AudioContextProvider";
+import { loadPreference, PreferenceKeys } from "../utils/preferencesUtils";
+import { formatVolume, Percentage } from "../utils/formatter";
+
+type MediaType = "music" | "effect";
 
 interface PlayControlProps {
   id?: string;
   name?: string;
   image?: string;
   artist?: string;
+  path?: string;
   source?: string;
+  type: MediaType;
 }
 
 const PlayControl: React.FC<PlayControlProps> = ({
@@ -18,7 +25,9 @@ const PlayControl: React.FC<PlayControlProps> = ({
   image,
   name,
   artist,
+  path,
   source,
+  type,
 }) => {
   const songMediaObjectRef = useRef<MediaObject | null>(null);
   const songAudioElementRef = useRef<HTMLAudioElement | null>(null);
@@ -28,8 +37,37 @@ const PlayControl: React.FC<PlayControlProps> = ({
   const [isInitialized, setIsInitialized] = useState<Boolean>(false);
   const [isPausedByUser, setIsPausedByUser] = useState<Boolean>(false);
 
+  const { setMusicAudio, setEffectAudio } = useAudioContext();
+  const [loadedVolume, setLoadedVolume] = useState(1.0);
+
+  let setAudio: any = null;
+  let volumePreferenceKey: PreferenceKeys;
+
+  if (type === "music") {
+    setAudio = setMusicAudio;
+    volumePreferenceKey = PreferenceKeys.SONG_VOLUME_PERCENTAGE;
+  } else {
+    setAudio = setEffectAudio;
+    volumePreferenceKey = PreferenceKeys.EFFECT_VOLUME_PERCENTAGE;
+  }
+
+  const loadPreferences = async () => {
+    const percentage: Percentage =
+      (await loadPreference(volumePreferenceKey)) ?? 100;
+
+    const volume = formatVolume(percentage);
+    setLoadedVolume(volume);
+  };
+
   const initializeAudio = async () => {
-    const songPath: string = `/assets/music/${source}`;
+    // load volume preferences
+    await loadPreferences();
+
+    if (!source || !path) {
+      return;
+    }
+
+    const songPath: string = `${path}${source}`;
 
     if (Capacitor.isNativePlatform()) {
       // Cleanup previous media object if it exists
@@ -37,10 +75,12 @@ const PlayControl: React.FC<PlayControlProps> = ({
         songMediaObjectRef.current.stop();
         songMediaObjectRef.current.release();
         songMediaObjectRef.current = null; // exp
+        setAudio(null);
       }
       try {
         const nativePath = getNativePublicPath(songPath);
         songMediaObjectRef.current = Media.create(nativePath);
+        songMediaObjectRef.current?.setVolume(loadedVolume);
 
         // restart audio when it ends automatically
         statusUpdateSubscription.current =
@@ -53,9 +93,11 @@ const PlayControl: React.FC<PlayControlProps> = ({
         setTimeout(() => {
           if (id !== "0") {
             setIsPlaying(true);
+            setAudio(songMediaObjectRef.current);
             songMediaObjectRef.current?.play();
           }
         }, 500);
+
         setIsInitialized(true);
       } catch (error) {
         console.error("Error initializing media: ", error);
@@ -67,15 +109,22 @@ const PlayControl: React.FC<PlayControlProps> = ({
         songAudioElementRef.current.src = "";
         songAudioElementRef.current.load();
         songAudioElementRef.current = null;
+        setAudio(null);
       }
 
       try {
         songAudioElementRef.current = new Audio(songPath);
+        songAudioElementRef.current.volume = loadedVolume;
         songAudioElementRef.current.loop = true;
-        if (id !== "0") {
-          setIsPlaying(true);
-          await songAudioElementRef.current.play();
-        }
+
+        setTimeout(async () => {
+          if (id !== "0") {
+            setIsPlaying(true);
+            setAudio(songAudioElementRef.current);
+            await songAudioElementRef.current?.play();
+          }
+        }, 500);
+
         setIsInitialized(true);
       } catch (error) {
         console.error("Error playing audio:", error);
@@ -97,6 +146,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
           songMediaObjectRef.current.stop();
           songMediaObjectRef.current.release();
           songMediaObjectRef.current = null;
+          setAudio(null);
         }
       } else {
         // Cleanup for web audio
@@ -105,10 +155,11 @@ const PlayControl: React.FC<PlayControlProps> = ({
           songAudioElementRef.current.src = "";
           songAudioElementRef.current.load();
           songAudioElementRef.current = null;
+          setAudio(null);
         }
       }
     };
-  }, [id, source]);
+  }, [id, source, loadedVolume]);
 
   const handlePlayClick = async () => {
     setIsPlaying(true);

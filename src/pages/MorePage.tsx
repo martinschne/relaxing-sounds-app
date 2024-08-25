@@ -5,7 +5,6 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import "./MixerPage.css";
 
 const MorePage: React.FC = () => {
   return (
