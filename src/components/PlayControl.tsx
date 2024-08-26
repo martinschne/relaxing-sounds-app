@@ -3,12 +3,11 @@ import { pauseOutline, playOutline } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import { Media, MediaObject } from "@awesome-cordova-plugins/media";
 import { Capacitor } from "@capacitor/core";
-import { getNativePublicPath } from "../utils/pathUtils";
+import { getNativePublicPath } from "../utils/getNativePublicPath";
 import { useAudioContext } from "../contexts/AudioContextProvider";
-import { loadPreference, PreferenceKeys } from "../utils/preferencesUtils";
-import { formatVolume, getDataByType, Percentage } from "../utils/formatter";
-
-type MediaType = "music" | "effect";
+import { loadPreference, PreferenceKeys } from "../utils/preferenceUtils";
+import { formatVolume, getDataByType } from "../utils/formatterUtils";
+import { Percentage, MediaType } from "../types";
 
 interface PlayControlProps {
   id?: string;

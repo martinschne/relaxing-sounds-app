@@ -1,20 +1,19 @@
-import { MediaObject } from "@awesome-cordova-plugins/media";
 import { useState, createContext, useContext, ReactNode } from "react";
-import { formatVolume, Percentage } from "../utils/formatter";
+import { formatVolume } from "../utils";
+import { Percentage, AudioObject, MediaType } from "../types";
 
-export type audioHandler = MediaObject | HTMLAudioElement | null;
-export type stateAction<T> = React.Dispatch<React.SetStateAction<T>>;
+export type StateAction<T> = React.Dispatch<React.SetStateAction<T>>;
 
 interface AudioContextType {
-  musicAudio: audioHandler;
-  effectAudio: audioHandler;
-  setMusicAudio: stateAction<audioHandler>;
-  setEffectAudio: stateAction<audioHandler>;
+  musicAudio: AudioObject;
+  effectAudio: AudioObject;
+  setMusicAudio: StateAction<AudioObject>;
+  setEffectAudio: StateAction<AudioObject>;
   musicVolumePercentage: Percentage | null;
   effectVolumePercentage: Percentage | null;
-  setMusicVolumePercentage: stateAction<Percentage | null>;
-  setEffectVolumePercentage: stateAction<Percentage | null>;
-  adjustVolume: (type: "music" | "effect", volume: Percentage | null) => void;
+  setMusicVolumePercentage: StateAction<Percentage | null>;
+  setEffectVolumePercentage: StateAction<Percentage | null>;
+  adjustVolume: (type: MediaType, volume: Percentage | null) => void;
 }
 
 export const AudioContext = createContext<AudioContextType | null>(null);
@@ -23,18 +22,15 @@ export const AudioContext = createContext<AudioContextType | null>(null);
 export const AudioContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [musicAudio, setMusicAudio] = useState<audioHandler>(null);
-  const [effectAudio, setEffectAudio] = useState<audioHandler>(null);
+  const [musicAudio, setMusicAudio] = useState<AudioObject>(null);
+  const [effectAudio, setEffectAudio] = useState<AudioObject>(null);
 
   const [musicVolumePercentage, setMusicVolumePercentage] =
     useState<Percentage | null>(null);
   const [effectVolumePercentage, setEffectVolumePercentage] =
     useState<Percentage | null>(null);
 
-  const adjustVolume = (
-    type: "music" | "effect",
-    volume: Percentage | null
-  ) => {
+  const adjustVolume = (type: MediaType, volume: Percentage | null) => {
     if (volume === null) {
       return;
     }

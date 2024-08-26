@@ -9,7 +9,7 @@ import {
 import { Song, songs } from "../data/songs";
 import { useState } from "react";
 import PlayControl from "../components/PlayControl";
-import { PreferenceKeys } from "../utils/preferencesUtils";
+import { PreferenceKeys } from "../utils/preferenceUtils";
 import PlayList from "../components/PlayList";
 import { SearchBar } from "../components/SearchBar";
 

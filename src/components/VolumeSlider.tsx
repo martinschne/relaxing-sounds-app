@@ -11,15 +11,15 @@ import {
   loadPreference,
   PreferenceKeys,
   savePreference,
-} from "../utils/preferencesUtils";
-import { Percentage } from "../utils/formatter";
+} from "../utils/preferenceUtils";
+import { Percentage, MediaType } from "../types";
 
 interface VolumeSliderProps {
-  id: "music" | "effect";
+  type: MediaType;
   label: string;
 }
 
-const VolumeSlider: React.FC<VolumeSliderProps> = ({ id, label }) => {
+const VolumeSlider: React.FC<VolumeSliderProps> = ({ type, label }) => {
   const getVolumeIcon = (volume: number) => {
     if (volume === 0) {
       return volumeMuteOutline;
@@ -41,11 +41,11 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ id, label }) => {
 
   const saveVolumePercentage = async (newVolume: Percentage) => {
     // save the new volume level to preferences
-    if (id === "music") {
+    if (type === "music") {
       await savePreference(PreferenceKeys.SONG_VOLUME_PERCENTAGE, newVolume);
       // save volume to context
       setMusicVolumePercentage(newVolume);
-    } else if (id === "effect") {
+    } else if (type === "effect") {
       await savePreference(PreferenceKeys.EFFECT_VOLUME_PERCENTAGE, newVolume);
       setEffectVolumePercentage(newVolume);
     }
@@ -55,7 +55,7 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ id, label }) => {
     const newVolume = event.detail.value as Percentage;
     setVolumePercentage(newVolume);
     setVolumeIcon(getVolumeIcon(newVolume));
-    adjustVolume(id, newVolume);
+    adjustVolume(type, newVolume);
     saveVolumePercentage(newVolume);
   };
 
@@ -63,12 +63,12 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ id, label }) => {
   useEffect(() => {
     const loadVolumePercentage = async () => {
       let percentage: Percentage | null = null;
-      if (id === "music") {
+      if (type === "music") {
         percentage = await loadPreference(
           PreferenceKeys.SONG_VOLUME_PERCENTAGE
         );
       }
-      if (id === "effect") {
+      if (type === "effect") {
         percentage = await loadPreference(
           PreferenceKeys.EFFECT_VOLUME_PERCENTAGE
         );
@@ -88,7 +88,7 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ id, label }) => {
   return (
     <IonItem>
       <IonRange
-        id={id}
+        id={type}
         labelPlacement="fixed"
         label={label}
         value={volumePercentage}

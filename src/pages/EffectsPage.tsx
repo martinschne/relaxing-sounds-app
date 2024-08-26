@@ -9,7 +9,7 @@ import { Song } from "../data/songs";
 import { effects } from "../data/effects";
 import { useState } from "react";
 import { SearchBar } from "../components/SearchBar";
-import { PreferenceKeys } from "../utils/preferencesUtils";
+import { PreferenceKeys } from "../utils/preferenceUtils";
 import { IonFooter } from "@ionic/react";
 import PlayList from "../components/PlayList";
 import PlayControl from "../components/PlayControl";
@@ -17,6 +17,7 @@ import PlayControl from "../components/PlayControl";
 const EffectsPage: React.FC = () => {
   const ASSETS_EFFECTS_PATH = "/assets/effects/";
   const EFFECTS_SEARCH_PLACEHOLDER = "Search by name, description or tag";
+
   const [filteredEffects, setFilteredEffects] = useState(
     JSON.parse(JSON.stringify(effects))
   );

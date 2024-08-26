@@ -31,8 +31,8 @@ const MixerPage: React.FC = () => {
           <IonLabel>Volume</IonLabel>
         </IonListHeader>
         <IonList>
-          <VolumeSlider id="music" label="Music" />
-          <VolumeSlider id="effect" label="Effect" />
+          <VolumeSlider type="music" label="Music" />
+          <VolumeSlider type="effect" label="Effect" />
         </IonList>
         <IonListHeader>
           <IonLabel>FX</IonLabel>
