@@ -41,11 +41,15 @@ export const AudioContextProvider: React.FC<{ children: ReactNode }> = ({
     const volumeSet = formatVolume(volume);
     const audio = type === "music" ? musicAudio : effectAudio;
 
-    if (audio) {
+    console.log(`$$ adjustVolume: volumeSet for ${type} is ${volumeSet}`);
+    console.log(
+      `$$ adjustVolume: audio object for ${type} is ${JSON.stringify(audio)}`
+    );
+
+    if (audio !== null) {
       if (audio instanceof HTMLAudioElement) {
         audio.volume = volumeSet;
-      }
-      if (audio instanceof MediaObject) {
+      } else {
         audio.setVolume(volumeSet);
       }
     }
