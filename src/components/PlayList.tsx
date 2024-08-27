@@ -5,7 +5,7 @@ import {
   PreferenceKeys,
   savePreference,
 } from "../utils/preferenceUtils";
-import { Song } from "../data/songs";
+import { Song } from "../types";
 import { IonList } from "@ionic/react";
 import SongCard from "./SongCard";
 

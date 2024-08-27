@@ -6,7 +6,8 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { Song, songs } from "../data/songs";
+import { songs } from "../data/songs";
+import { Song } from "../types";
 import { useState } from "react";
 import PlayControl from "../components/PlayControl";
 import { PreferenceKeys } from "../utils/preferenceUtils";

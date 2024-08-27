@@ -5,7 +5,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { Song } from "../data/songs";
+import { Song } from "../types";
 import { effects } from "../data/effects";
 import { useState } from "react";
 import { SearchBar } from "../components/SearchBar";

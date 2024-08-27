@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
-import { Song } from "./songs";
+import { Song } from "../types";
 import {
   cc_by_4_0_international,
   cc_by_3_0,
   cc_1_0_universal,
-} from "./licenses";
+} from "../types/LicenseTypes";
 
 export const effects: Song[] = [
   {
@@ -13,6 +13,7 @@ export const effects: Song[] = [
     artist: "Inchadney",
     image: "heavy-rain.jpg",
     source: "104391-inchadney--heavy-rain.mp3",
+    url: "https://freesound.org/s/104391/",
     tags: ["rain", "heavy"],
     description: "Soothing sound of heavy rain",
     license: cc_by_4_0_international,
@@ -23,6 +24,7 @@ export const effects: Song[] = [
     artist: "Inchadney",
     image: "cricket.jpg",
     source: "124700-inchadney--crickets.mp3",
+    url: "https://freesound.org/s/124700/",
     tags: ["insect", "crickets", "nature"],
     description: "Natural cricket sound for relax or sleeping",
     license: cc_by_4_0_international,
@@ -33,6 +35,7 @@ export const effects: Song[] = [
     artist: "Aladar",
     image: "singing-bird.jpg",
     source: "511758-aladar--early-morning-birds.mp3",
+    url: "https://freesound.org/s/511758/",
     tags: ["birds", "morning", "meditation", "relax"],
     description: "Beautiful morning serenade of various birds",
     license: cc_by_3_0,
@@ -43,6 +46,7 @@ export const effects: Song[] = [
     artist: "Joozz",
     image: "ocean-waves.jpg",
     source: "531950-joozz--waves-ocean.mp3",
+    url: "https://freesound.org/s/531950/",
     tags: ["water", "ocean", "waves", "sleep", "meditation"],
     description: "Calming ocean waves for great sleep and meditation",
     license: cc_by_4_0_international,
@@ -53,6 +57,7 @@ export const effects: Song[] = [
     artist: "CheatinSloth",
     image: "fountain-babbling.jpg",
     source: "738777-cheatinsloth--fountain-babbling.mp3",
+    url: "https://freesound.org/s/738777/",
     tags: ["water", "fountain", "babble", "relax"],
     description: "Babbling fountain nurture for your ears",
     license: cc_1_0_universal,
@@ -63,6 +68,7 @@ export const effects: Song[] = [
     artist: "Universifield",
     image: "fire-crackling.jpg",
     source: "750241-universfield--crackling-fire.mp3",
+    url: "https://freesound.org/s/750241/",
     tags: ["fire", "crackling", "evening", "sleep"],
     description: "Crackling fire best masking sound",
     license: cc_1_0_universal,

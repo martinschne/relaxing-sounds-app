@@ -1,16 +1,6 @@
-import {
-  IonItem,
-  IonThumbnail,
-  IonLabel,
-  IonImg,
-  IonIcon,
-  IonPopover,
-  IonContent,
-  IonList,
-} from "@ionic/react";
-import { Song } from "../data/songs";
-import { ellipsisHorizontalOutline } from "ionicons/icons";
-import { useRef, useState } from "react";
+import { IonItem, IonThumbnail, IonLabel, IonImg } from "@ionic/react";
+import ActionsPopover from "./ActionsPopover";
+import { Song } from "../types";
 
 export interface SongCardProps {
   song: Song;
@@ -18,16 +8,6 @@ export interface SongCardProps {
 }
 
 const SongCard: React.FC<SongCardProps> = ({ song, onSelect }) => {
-  const actionsPopover = useRef<HTMLIonPopoverElement>(null);
-  const [actionsPopoverOpen, setActionsPopoverOpen] = useState(false);
-
-  const openActionsPopover = (
-    event: React.MouseEvent<HTMLIonIconElement, MouseEvent>,
-  ) => {
-    actionsPopover.current!.event = event;
-    setActionsPopoverOpen(true);
-  };
-
   return (
     <IonItem onClick={() => onSelect(song.id)}>
       <IonThumbnail slot="start">
@@ -42,34 +22,7 @@ const SongCard: React.FC<SongCardProps> = ({ song, onSelect }) => {
         <h2>{song.name}</h2>
         <p>{song.artist}</p>
       </IonLabel>
-      <IonIcon
-        id={`actions-trigger-${song.id}`}
-        icon={ellipsisHorizontalOutline}
-        onClick={(event) => {
-          event.stopPropagation();
-          openActionsPopover(event);
-        }}
-        aria-label="Song actions"
-      ></IonIcon>
-      <IonPopover
-        ref={actionsPopover}
-        isOpen={actionsPopoverOpen}
-        onDidDismiss={() => setActionsPopoverOpen(false)}
-        trigger={`actions-trigger-${song.id}`}
-        triggerAction="click"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <IonContent class="ion-padding">
-          <IonList>
-            <IonItem>
-              <IonLabel>Detail</IonLabel>
-            </IonItem>
-            <IonItem>
-              <IonLabel>Share</IonLabel>
-            </IonItem>
-          </IonList>
-        </IonContent>
-      </IonPopover>
+      <ActionsPopover song={song} />
     </IonItem>
   );
 };

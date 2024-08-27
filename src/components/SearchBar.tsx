@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Song } from "../data/songs";
+import { Song } from "../types";
 import { IonSearchbar } from "@ionic/react";
 
 export interface SearchBarProps {
@@ -22,7 +22,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       (song) =>
         song.name.toLowerCase().includes(query) ||
         song.artist.toLowerCase().includes(query) ||
-        song.tags.some((tag) => tag.toLowerCase().includes(query)),
+        song.tags.some((tag) => tag.toLowerCase().includes(query))
     );
 
     setSearchText(query);
