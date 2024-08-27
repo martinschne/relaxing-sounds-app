@@ -1,11 +1,24 @@
-import { IonIcon, IonImg, IonItem, IonLabel, IonThumbnail } from "@ionic/react";
-import { pauseOutline, playOutline } from "ionicons/icons";
+import {
+  IonIcon,
+  IonImg,
+  IonItem,
+  IonLabel,
+  IonThumbnail,
+  IonToast,
+  useIonViewWillEnter,
+  useIonViewWillLeave,
+} from "@ionic/react";
+import { pauseOutline, playOutline, volumeMuteOutline } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import { Media, MediaObject } from "@awesome-cordova-plugins/media";
 import { Capacitor } from "@capacitor/core";
 import { getNativePublicPath } from "../utils/getNativePublicPath";
 import { useAudioContext } from "../contexts/AudioContextProvider";
-import { loadPreference, PreferenceKeys } from "../utils/preferenceUtils";
+import {
+  loadPreference,
+  PreferenceKeys,
+  savePreference,
+} from "../utils/preferenceUtils";
 import { formatVolume, getDataByType } from "../utils/formatterUtils";
 import { Percentage, MediaType } from "../types";
 
@@ -41,8 +54,12 @@ const PlayControl: React.FC<PlayControlProps> = ({
     setEffectAudio,
     musicVolumePercentage,
     effectVolumePercentage,
+    setMusicVolumePercentage,
+    setEffectVolumePercentage,
+    adjustVolume,
   } = useAudioContext();
   const [loadedVolume, setLoadedVolume] = useState(1.0);
+  const [showToast, setShowToast] = useState(false);
 
   let setAudio = getDataByType(type, setMusicAudio, setEffectAudio);
 
@@ -154,7 +171,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
 
   useEffect(() => {
     initializeAudio();
-
+    setShowToast(true); // reshow the toast for new song played
     return () => {
       if (Capacitor.isNativePlatform()) {
         if (statusUpdateSubscription.current) {
@@ -184,6 +201,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
 
   const handlePlayClick = async () => {
     setIsPlaying(true);
+    setShowToast(true);
 
     if (!isInitialized) {
       await initializeAudio();
@@ -213,31 +231,80 @@ const PlayControl: React.FC<PlayControlProps> = ({
     }
   };
 
+  useIonViewWillEnter(() => {
+    setShowToast(true);
+  });
+
+  useIonViewWillLeave(() => {
+    setShowToast(false);
+  });
+
+  const handleUnmute = async () => {
+    const UNMUTED_VOLUME = 100;
+
+    if (type === "music") {
+      await savePreference(
+        PreferenceKeys.SONG_VOLUME_PERCENTAGE,
+        UNMUTED_VOLUME
+      );
+      setMusicVolumePercentage(UNMUTED_VOLUME);
+    } else if (type === "effect") {
+      await savePreference(
+        PreferenceKeys.EFFECT_VOLUME_PERCENTAGE,
+        UNMUTED_VOLUME
+      );
+      setEffectVolumePercentage(UNMUTED_VOLUME);
+    }
+    adjustVolume(type, UNMUTED_VOLUME);
+    setLoadedVolume(formatVolume(UNMUTED_VOLUME));
+  };
+
   return (
-    <IonItem>
-      <IonThumbnail slot="start">
-        {image && (
-          <IonImg
-            src={`/assets/images/${image}`}
-            alt={`Album cover for '${name}' by ${artist}`}
-          ></IonImg>
-        )}
-      </IonThumbnail>
-      <IonLabel>{name}</IonLabel>
-      {isPlaying ? (
-        <IonIcon
-          icon={pauseOutline}
-          aria-label="Pause song"
-          onClick={handlePauseClick}
-        ></IonIcon>
-      ) : (
-        <IonIcon
-          icon={playOutline}
-          aria-label="Play song"
-          onClick={handlePlayClick}
-        ></IonIcon>
+    <>
+      {showToast && (
+        <IonToast
+          isOpen={showToast && isPlaying && loadedVolume === 0}
+          message="The volume is set to zero"
+          buttons={[
+            {
+              text: "Unmute",
+              handler: handleUnmute,
+            },
+          ]}
+          icon={volumeMuteOutline}
+          position="bottom"
+          positionAnchor={`${type}Footer`}
+          swipeGesture="vertical"
+          duration={5000}
+          onDidDismiss={() => setShowToast(false)}
+        ></IonToast>
       )}
-    </IonItem>
+
+      <IonItem>
+        <IonThumbnail slot="start">
+          {image && (
+            <IonImg
+              src={`/assets/images/${image}`}
+              alt={`Album cover for '${name}' by ${artist}`}
+            ></IonImg>
+          )}
+        </IonThumbnail>
+        <IonLabel>{name}</IonLabel>
+        {isPlaying ? (
+          <IonIcon
+            icon={pauseOutline}
+            aria-label="Pause song"
+            onClick={handlePauseClick}
+          ></IonIcon>
+        ) : (
+          <IonIcon
+            icon={playOutline}
+            aria-label="Play song"
+            onClick={handlePlayClick}
+          ></IonIcon>
+        )}
+      </IonItem>
+    </>
   );
 };
 

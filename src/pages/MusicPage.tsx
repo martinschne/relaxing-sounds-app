@@ -49,8 +49,7 @@ const MusicPage: React.FC = () => {
           preferenceKey={PreferenceKeys.SELECTED_SONG}
         />
       </IonContent>
-
-      <IonFooter translucent={true}>
+      <IonFooter id="musicFooter">
         <PlayControl
           id="0"
           path={ASSETS_MUSIC_PATH}

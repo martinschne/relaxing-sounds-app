@@ -13,6 +13,7 @@ import {
   savePreference,
 } from "../utils/preferenceUtils";
 import { Percentage, MediaType } from "../types";
+import { getDataByType } from "../utils";
 
 interface VolumeSliderProps {
   type: MediaType;
@@ -36,8 +37,13 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ type, label }) => {
   const [volumeIcon, setVolumeIcon] = useState<string>(
     getVolumeIcon(volumePercentage)
   );
-  const { setMusicVolumePercentage, setEffectVolumePercentage, adjustVolume } =
-    useAudioContext();
+  const {
+    musicVolumePercentage,
+    effectVolumePercentage,
+    setMusicVolumePercentage,
+    setEffectVolumePercentage,
+    adjustVolume,
+  } = useAudioContext();
 
   const saveVolumePercentage = async (newVolume: Percentage) => {
     // save the new volume level to preferences
@@ -58,6 +64,12 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ type, label }) => {
     adjustVolume(type, newVolume);
     saveVolumePercentage(newVolume);
   };
+
+  const dependencies = getDataByType(
+    type,
+    [musicVolumePercentage],
+    [effectVolumePercentage]
+  );
 
   // loading saved volume from preferences
   useEffect(() => {
@@ -83,7 +95,7 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ type, label }) => {
     };
 
     loadVolumePercentage();
-  }, []);
+  }, [...dependencies]);
 
   return (
     <IonItem>

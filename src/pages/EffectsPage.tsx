@@ -25,7 +25,7 @@ const EffectsPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader id="header">
         <IonToolbar>
           <IonTitle>Effects</IonTitle>
         </IonToolbar>
@@ -51,8 +51,7 @@ const EffectsPage: React.FC = () => {
           preferenceKey={PreferenceKeys.SELECTED_EFFECT}
         />
       </IonContent>
-
-      <IonFooter translucent={true}>
+      <IonFooter id="effectFooter">
         <PlayControl
           id="0"
           path={ASSETS_EFFECTS_PATH}
