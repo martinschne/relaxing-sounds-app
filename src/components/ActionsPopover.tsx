@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { Song } from "../types";
 import PopoverItem from "./PopoverItem";
 import { Share } from "@capacitor/share";
+import DetailModal from "./DetailModal";
 
 interface ActionsPopoverProps {
   song: Song;
@@ -17,7 +18,7 @@ const ActionsPopover: React.FC<ActionsPopoverProps> = ({ song }) => {
   const actionsPopover = useRef<HTMLIonPopoverElement>(null);
 
   const [actionsPopoverOpen, setActionsPopoverOpen] = useState(false);
-  // const [isShareLoading, setIsShareLoading] = useState(false);
+  const [detailModelOpen, setDetailModelOpen] = useState(false);
   const [sharingPossible, setSharingPossible] = useState<boolean | null>(null);
 
   const openActionsPopover = (
@@ -27,13 +28,21 @@ const ActionsPopover: React.FC<ActionsPopoverProps> = ({ song }) => {
     setActionsPopoverOpen(true);
   };
 
-  const handleShowDetail = () => {};
+  const handleDetailModalOpen = () => {
+    setDetailModelOpen(true);
+    setActionsPopoverOpen(false);
+  };
+
+  const handleDetailModalClose = () => {
+    setDetailModelOpen(false);
+  };
 
   const handleShare = async () => {
+    setActionsPopoverOpen(false);
     try {
       await Share.share({
         title: `${song.artist} - ${song.name}`,
-        text: "Look at this nice sound piece I found!",
+        text: "Here is an interesting track from Relaxing Sounds app!",
         url: song.url ?? undefined,
         dialogTitle: "Share with friends",
       });
@@ -72,20 +81,22 @@ const ActionsPopover: React.FC<ActionsPopoverProps> = ({ song }) => {
         }}
         aria-label="Song actions"
       ></IonIcon>
+
       <IonPopover
         ref={actionsPopover}
         isOpen={actionsPopoverOpen}
         onDidDismiss={() => setActionsPopoverOpen(false)}
         trigger={`actions-trigger-${song.id}`}
         triggerAction="click"
-        onClick={(event) => event.stopPropagation()}
+        // onClick={(event) => event.stopPropagation()}
       >
         <IonContent>
           <IonList>
             <PopoverItem
+              id="open-detail-modal"
               text="Detail"
               icon={informationCircleOutline}
-              onSelect={handleShowDetail}
+              onSelect={handleDetailModalOpen}
             />
             {sharingPossible && (
               <PopoverItem
@@ -97,6 +108,11 @@ const ActionsPopover: React.FC<ActionsPopoverProps> = ({ song }) => {
           </IonList>
         </IonContent>
       </IonPopover>
+      <DetailModal
+        song={song}
+        isOpen={detailModelOpen}
+        onClose={handleDetailModalClose}
+      />
     </>
   );
 };

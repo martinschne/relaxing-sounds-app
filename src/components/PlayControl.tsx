@@ -170,6 +170,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
   };
 
   useEffect(() => {
+    console.log("Useffect: Id " + id + "Source: " + source);
     initializeAudio();
     setShowToast(true); // reshow the toast for new song played
     return () => {
