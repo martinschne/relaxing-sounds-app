@@ -20,27 +20,23 @@ import {
   savePreference,
 } from "../utils/preferenceUtils";
 import { formatVolume, getDataByType } from "../utils/formatterUtils";
-import { Percentage, MediaType } from "../types";
+import { Percentage, MediaType, Song } from "../types";
 
 interface PlayControlProps {
-  id?: string;
-  name?: string;
-  image?: string;
-  artist?: string;
-  path?: string;
-  source?: string;
+  song: Song;
   type: MediaType;
+  path: string;
+  play: boolean;
 }
 
 const PlayControl: React.FC<PlayControlProps> = ({
-  id,
-  image,
-  name,
-  artist,
+  song,
   path,
-  source,
   type,
+  play,
 }) => {
+  const { image, name, artist, source } = song;
+
   const songMediaObjectRef = useRef<MediaObject | null>(null);
   const songAudioElementRef = useRef<HTMLAudioElement | null>(null);
   const statusUpdateSubscription = useRef<any>(null);
@@ -123,7 +119,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
           });
 
         setTimeout(() => {
-          if (id !== "0") {
+          if (play) {
             setIsPlaying(true);
             console.log(
               "$$ store media obj in audio ctx: " +
@@ -155,7 +151,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
         setAudio(songAudioElementRef.current);
 
         setTimeout(async () => {
-          if (id !== "0") {
+          if (play) {
             setIsPlaying(true);
             await songAudioElementRef.current?.play();
           }
@@ -170,7 +166,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
   };
 
   useEffect(() => {
-    console.log("Useffect: Id " + id + "Source: " + source);
+    console.log("Useffect: play is is set to " + play);
     initializeAudio();
     setShowToast(true); // reshow the toast for new song played
     return () => {
@@ -194,8 +190,8 @@ const PlayControl: React.FC<PlayControlProps> = ({
         }
       }
     };
-  }, [id, source]);
-  // experimental
+  }, [source]);
+
   useEffect(() => {
     loadPreferences();
   }, [musicVolumePercentage, effectVolumePercentage]);

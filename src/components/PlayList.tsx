@@ -10,23 +10,26 @@ import { IonList } from "@ionic/react";
 import SongCard from "./SongCard";
 
 export interface PlayListProps {
-  filteredSongs: Song[];
-  selectedSong: Song | null;
-  setSelectedSong: React.Dispatch<React.SetStateAction<Song | null>>;
+  filtered: Song[];
+  selected: Song | null;
   preferenceKey: PreferenceKeys;
+  setSelected: React.Dispatch<React.SetStateAction<Song | null>>;
+  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const PlayList: React.FC<PlayListProps> = ({
-  filteredSongs,
-  selectedSong,
-  setSelectedSong,
+  filtered,
+  selected,
   preferenceKey,
+  setSelected,
+  setIsPlaying,
 }) => {
   const handleSelectSong = (id: string) => {
-    const filteredSong = filteredSongs.find((song: Song) => song.id === id);
+    const filteredSong = filtered.find((song: Song) => song.id === id);
     const selected = JSON.parse(JSON.stringify(filteredSong));
-    selected.id = uuidv4(); // add new id to trigger component refresh
-    setSelectedSong(selected);
+    setSelected(selected);
+    setIsPlaying(true);
+    console.log("The song was selected to play: " + selected.name);
   };
 
   useEffect(() => {
@@ -35,12 +38,12 @@ const PlayList: React.FC<PlayListProps> = ({
       const savedSong: Song | null = await loadPreference<Song>(preferenceKey);
       if (savedSong) {
         savedSong.id = "0"; // set as preselected song (don't play)
-        setSelectedSong(savedSong);
+        setSelected(savedSong);
       } else {
         // no previously set song, preselect 1st one
-        const preselected = filteredSongs[0];
+        const preselected = filtered[0];
         preselected.id = "0";
-        setSelectedSong(preselected);
+        setSelected(preselected);
       }
     };
 
@@ -48,15 +51,15 @@ const PlayList: React.FC<PlayListProps> = ({
   }, []);
 
   useEffect(() => {
-    // Save the selected song whenever it changes
-    if (selectedSong && selectedSong.id !== "0") {
-      savePreference<Song>(preferenceKey, selectedSong);
+    // Save the selected media whenever it changes
+    if (selected) {
+      savePreference<Song>(preferenceKey, selected);
     }
-  }, [selectedSong]);
+  }, [selected]);
 
   return (
     <IonList>
-      {filteredSongs.map((song: Song) => (
+      {filtered.map((song: Song) => (
         <SongCard key={song.id} song={song} onSelect={handleSelectSong} />
       ))}
     </IonList>

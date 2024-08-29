@@ -4,3 +4,10 @@
   display: block;
   margin: 0 auto;
 }
+
+.tags-container {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}

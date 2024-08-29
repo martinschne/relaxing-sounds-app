@@ -17,10 +17,14 @@ import { SearchBar } from "../components/SearchBar";
 const MusicPage: React.FC = () => {
   const ASSETS_MUSIC_PATH = "/assets/music/";
   const MUSIC_SEARCH_PLACEHOLDER = "Search by name, artist or tag";
+
   const [filteredSongs, setFilteredSongs] = useState(
     JSON.parse(JSON.stringify(songs))
   );
-  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
+  const [selectedSong, setSelectedSong] = useState<Song | null>(
+    filteredSongs[0]
+  );
+  const [isPlaying, setIsPlaying] = useState(false);
 
   return (
     <IonPage>
@@ -43,18 +47,19 @@ const MusicPage: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <PlayList
-          filteredSongs={filteredSongs}
-          selectedSong={selectedSong}
-          setSelectedSong={setSelectedSong}
+          filtered={filteredSongs}
+          selected={selectedSong}
           preferenceKey={PreferenceKeys.SELECTED_SONG}
+          setSelected={setSelectedSong}
+          setIsPlaying={setIsPlaying}
         />
       </IonContent>
       <IonFooter id="musicFooter">
         <PlayControl
-          id="0"
+          song={selectedSong ?? filteredSongs[0]}
           path={ASSETS_MUSIC_PATH}
           type="music"
-          {...selectedSong}
+          play={isPlaying}
         />
       </IonFooter>
     </IonPage>

@@ -29,6 +29,7 @@ interface DetailModalProps {
 
 const DetailModal: React.FC<DetailModalProps> = ({ song, isOpen, onClose }) => {
   const modal = useRef<HTMLIonModalElement>(null);
+
   return (
     <IonModal
       ref={modal}
@@ -41,7 +42,13 @@ const DetailModal: React.FC<DetailModalProps> = ({ song, isOpen, onClose }) => {
         <IonToolbar>
           <IonTitle>Detail</IonTitle>
           <IonButtons slot="end">
-            <IonButton strong={true} onClick={onClose}>
+            <IonButton
+              strong={true}
+              onClick={(event) => {
+                event.stopPropagation();
+                modal.current?.dismiss();
+              }}
+            >
               Close
             </IonButton>
           </IonButtons>
@@ -64,11 +71,13 @@ const DetailModal: React.FC<DetailModalProps> = ({ song, isOpen, onClose }) => {
             <IonText>
               <p>{song.description}</p>
             </IonText>
-            {song.tags.map((tag, index) => (
-              <IonChip key={index}>
-                <IonLabel>#{tag}</IonLabel>
-              </IonChip>
-            ))}
+            <div className="tags-container">
+              {song.tags.map((tag, index) => (
+                <IonChip key={index}>
+                  <IonLabel>#{tag}</IonLabel>
+                </IonChip>
+              ))}
+            </div>
           </IonCardContent>
         </IonCard>
       </IonContent>
