@@ -21,9 +21,7 @@ const MusicPage: React.FC = () => {
   const [filteredSongs, setFilteredSongs] = useState(
     JSON.parse(JSON.stringify(songs))
   );
-  const [selectedSong, setSelectedSong] = useState<Song | null>(
-    filteredSongs[0]
-  );
+  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
@@ -48,7 +46,6 @@ const MusicPage: React.FC = () => {
         </IonHeader>
         <PlayList
           filtered={filteredSongs}
-          selected={selectedSong}
           preferenceKey={PreferenceKeys.SELECTED_SONG}
           setSelected={setSelectedSong}
           setIsPlaying={setIsPlaying}
@@ -56,7 +53,7 @@ const MusicPage: React.FC = () => {
       </IonContent>
       <IonFooter id="musicFooter">
         <PlayControl
-          song={selectedSong ?? filteredSongs[0]}
+          song={selectedSong}
           path={ASSETS_MUSIC_PATH}
           type="music"
           play={isPlaying}

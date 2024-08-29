@@ -1,11 +1,11 @@
-import { IonItem, IonRange, IonIcon } from "@ionic/react";
+import { IonItem, IonRange, IonIcon, useIonViewWillEnter } from "@ionic/react";
 import {
   volumeMuteOutline,
   volumeLowOutline,
   volumeMediumOutline,
   volumeHighOutline,
 } from "ionicons/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useAudioContext } from "../contexts/AudioContextProvider";
 import {
   loadPreference,
@@ -21,8 +21,8 @@ interface VolumeSliderProps {
 }
 
 const VolumeSlider: React.FC<VolumeSliderProps> = ({ type, label }) => {
-  const getVolumeIcon = (volume: number) => {
-    if (volume === 0) {
+  const getVolumeIcon = (volume: number | null) => {
+    if (volume === null || volume === 0) {
       return volumeMuteOutline;
     } else if (volume < 35) {
       return volumeLowOutline;
@@ -33,7 +33,7 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ type, label }) => {
     }
   };
 
-  const [volumePercentage, setVolumePercentage] = useState<number>(50);
+  const [volumePercentage, setVolumePercentage] = useState<number>(0);
   const [volumeIcon, setVolumeIcon] = useState<string>(
     getVolumeIcon(volumePercentage)
   );
@@ -71,29 +71,27 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ type, label }) => {
     [effectVolumePercentage]
   );
 
+  const loadVolumePercentage = async () => {
+    let percentage: Percentage | null = null;
+    if (type === "music") {
+      percentage = await loadPreference(PreferenceKeys.SONG_VOLUME_PERCENTAGE);
+    }
+    if (type === "effect") {
+      percentage = await loadPreference(
+        PreferenceKeys.EFFECT_VOLUME_PERCENTAGE
+      );
+    }
+    if (percentage !== null) {
+      setVolumePercentage(percentage);
+    } else {
+      percentage = 100;
+      setVolumePercentage(percentage);
+    }
+    setVolumeIcon(getVolumeIcon(percentage));
+  };
+
   // loading saved volume from preferences
   useEffect(() => {
-    const loadVolumePercentage = async () => {
-      let percentage: Percentage | null = null;
-      if (type === "music") {
-        percentage = await loadPreference(
-          PreferenceKeys.SONG_VOLUME_PERCENTAGE
-        );
-      }
-      if (type === "effect") {
-        percentage = await loadPreference(
-          PreferenceKeys.EFFECT_VOLUME_PERCENTAGE
-        );
-      }
-      if (percentage !== null) {
-        setVolumePercentage(percentage);
-      } else {
-        percentage = 100;
-        setVolumePercentage(percentage);
-      }
-      setVolumeIcon(getVolumeIcon(percentage));
-    };
-
     loadVolumePercentage();
   }, [...dependencies]);
 

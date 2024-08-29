@@ -21,9 +21,7 @@ const EffectsPage: React.FC = () => {
   const [filteredEffects, setFilteredEffects] = useState(
     JSON.parse(JSON.stringify(effects))
   );
-  const [selectedEffect, setSelectedEffect] = useState<Song | null>(
-    filteredEffects[0]
-  );
+  const [selectedEffect, setSelectedEffect] = useState<Song | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
@@ -49,7 +47,6 @@ const EffectsPage: React.FC = () => {
         </IonHeader>
         <PlayList
           filtered={filteredEffects}
-          selected={selectedEffect}
           preferenceKey={PreferenceKeys.SELECTED_EFFECT}
           setSelected={setSelectedEffect}
           setIsPlaying={setIsPlaying}
@@ -57,7 +54,7 @@ const EffectsPage: React.FC = () => {
       </IonContent>
       <IonFooter id="effectFooter">
         <PlayControl
-          song={selectedEffect ?? filteredEffects[0]}
+          song={selectedEffect}
           path={ASSETS_EFFECTS_PATH}
           type="effect"
           play={isPlaying}

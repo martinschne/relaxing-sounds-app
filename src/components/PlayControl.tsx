@@ -2,6 +2,7 @@ import {
   IonIcon,
   IonItem,
   IonLabel,
+  IonSkeletonText,
   IonThumbnail,
   IonToast,
   useIonViewWillEnter,
@@ -23,7 +24,7 @@ import { Percentage, MediaType, Song } from "../types";
 import FallbackImage from "./FallbackImage";
 
 interface PlayControlProps {
-  song: Song;
+  song: Song | null;
   type: MediaType;
   path: string;
   play: boolean;
@@ -78,7 +79,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
     // load volume preferences
     await loadPreferences();
 
-    if (!song.source || !path) {
+    if (!song || !song.source || !path) {
       return;
     }
 
@@ -165,7 +166,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
 
   useEffect(() => {
     console.log("Useffect: play is is set to " + play);
-    console.log("Useffect: song.image is " + song.image);
+    console.log("Useffect: song.image is " + song?.image);
     initializeAudio();
     setShowToast(true); // reshow the toast for new song played
     return () => {
@@ -189,7 +190,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
         }
       }
     };
-  }, [song.source]);
+  }, [song?.source]);
 
   useEffect(() => {
     loadPreferences();
@@ -275,29 +276,30 @@ const PlayControl: React.FC<PlayControlProps> = ({
           onDidDismiss={() => setShowToast(false)}
         ></IonToast>
       )}
-
-      <IonItem>
-        <IonThumbnail slot="start">
-          <FallbackImage
-            src={song.image}
-            alt={`Album cover for '${song.name}' by ${song.artist}`}
-          />
-        </IonThumbnail>
-        <IonLabel>{song.name}</IonLabel>
-        {isPlaying ? (
-          <IonIcon
-            icon={pauseOutline}
-            aria-label="Pause song"
-            onClick={handlePauseClick}
-          ></IonIcon>
-        ) : (
-          <IonIcon
-            icon={playOutline}
-            aria-label="Play song"
-            onClick={handlePlayClick}
-          ></IonIcon>
-        )}
-      </IonItem>
+      {song && (
+        <IonItem>
+          <IonThumbnail slot="start">
+            <FallbackImage
+              src={song.image}
+              alt={`Album cover for '${song.name}' by ${song.artist}`}
+            />
+          </IonThumbnail>
+          <IonLabel>{song.name}</IonLabel>
+          {isPlaying ? (
+            <IonIcon
+              icon={pauseOutline}
+              aria-label="Pause song"
+              onClick={handlePauseClick}
+            ></IonIcon>
+          ) : (
+            <IonIcon
+              icon={playOutline}
+              aria-label="Play song"
+              onClick={handlePlayClick}
+            ></IonIcon>
+          )}
+        </IonItem>
+      )}
     </>
   );
 };
