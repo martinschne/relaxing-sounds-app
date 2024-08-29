@@ -18,6 +18,7 @@ import {
 } from "@ionic/react";
 import { Song } from "../types";
 import { useRef } from "react";
+import FallbackImage from "./FallbackImage";
 
 import "./DetailModal.css";
 
@@ -56,13 +57,11 @@ const DetailModal: React.FC<DetailModalProps> = ({ song, isOpen, onClose }) => {
       </IonHeader>
       <IonContent fullscreen>
         <IonCard>
-          {song.image && (
-            <IonImg
-              id="modal-thumbnail"
-              src={`/assets/images/${song.image}`}
-              alt={`Album cover for '${song.name}' by ${song.artist}`}
-            ></IonImg>
-          )}
+          <FallbackImage
+            id="modal-thumbnail"
+            src={song.image}
+            alt={`Album cover for '${song.name}' by ${song.artist}`}
+          />
           <IonCardHeader>
             <IonCardTitle>{song.name}</IonCardTitle>
             <IonCardSubtitle>{song.artist}</IonCardSubtitle>

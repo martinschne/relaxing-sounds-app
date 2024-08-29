@@ -1,8 +1,8 @@
 import { IonItem, IonThumbnail, IonLabel, IonImg, IonIcon } from "@ionic/react";
 import ActionsPopover from "./ActionsPopover";
 import { Song } from "../types";
-import { useState } from "react";
 import { ellipsisHorizontalOutline } from "ionicons/icons";
+import FallbackImage from "./FallbackImage";
 
 export interface SongCardProps {
   song: Song;
@@ -10,24 +10,17 @@ export interface SongCardProps {
 }
 
 const SongCard: React.FC<SongCardProps> = ({ song, onSelect }) => {
-  const [imgSrc, setImgSrc] = useState(`/assets/images/${song.image}`);
-
   const handleSongClick = () => {
     onSelect(song.id);
-  };
-
-  const handleImageLoadingError = () => {
-    setImgSrc("/assets/images/thumbnail.svg");
   };
 
   return (
     <IonItem onClick={handleSongClick}>
       <IonThumbnail slot="start">
-        <IonImg
-          src={imgSrc}
+        <FallbackImage
+          src={song.image}
           alt={`Album cover for '${song.name}' by ${song.artist}`}
-          onError={handleImageLoadingError}
-        ></IonImg>
+        />
       </IonThumbnail>
       <IonLabel>
         <h2>{song.name}</h2>

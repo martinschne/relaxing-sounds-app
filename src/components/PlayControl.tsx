@@ -1,6 +1,5 @@
 import {
   IonIcon,
-  IonImg,
   IonItem,
   IonLabel,
   IonThumbnail,
@@ -21,6 +20,7 @@ import {
 } from "../utils/preferenceUtils";
 import { formatVolume, getDataByType } from "../utils/formatterUtils";
 import { Percentage, MediaType, Song } from "../types";
+import FallbackImage from "./FallbackImage";
 
 interface PlayControlProps {
   song: Song;
@@ -35,8 +35,6 @@ const PlayControl: React.FC<PlayControlProps> = ({
   type,
   play,
 }) => {
-  const { image, name, artist, source } = song;
-
   const songMediaObjectRef = useRef<MediaObject | null>(null);
   const songAudioElementRef = useRef<HTMLAudioElement | null>(null);
   const statusUpdateSubscription = useRef<any>(null);
@@ -80,11 +78,11 @@ const PlayControl: React.FC<PlayControlProps> = ({
     // load volume preferences
     await loadPreferences();
 
-    if (!source || !path) {
+    if (!song.source || !path) {
       return;
     }
 
-    const songPath: string = `${path}${source}`;
+    const songPath: string = `${path}${song.source}`;
 
     if (Capacitor.isNativePlatform()) {
       // Cleanup previous media object if it exists
@@ -167,6 +165,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
 
   useEffect(() => {
     console.log("Useffect: play is is set to " + play);
+    console.log("Useffect: song.image is " + song.image);
     initializeAudio();
     setShowToast(true); // reshow the toast for new song played
     return () => {
@@ -190,7 +189,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
         }
       }
     };
-  }, [source]);
+  }, [song.source]);
 
   useEffect(() => {
     loadPreferences();
@@ -279,14 +278,12 @@ const PlayControl: React.FC<PlayControlProps> = ({
 
       <IonItem>
         <IonThumbnail slot="start">
-          {image && (
-            <IonImg
-              src={`/assets/images/${image}`}
-              alt={`Album cover for '${name}' by ${artist}`}
-            ></IonImg>
-          )}
+          <FallbackImage
+            src={song.image}
+            alt={`Album cover for '${song.name}' by ${song.artist}`}
+          />
         </IonThumbnail>
-        <IonLabel>{name}</IonLabel>
+        <IonLabel>{song.name}</IonLabel>
         {isPlaying ? (
           <IonIcon
             icon={pauseOutline}
