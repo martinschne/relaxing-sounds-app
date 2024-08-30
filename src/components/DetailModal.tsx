@@ -43,7 +43,7 @@ const DetailModal: React.FC<DetailModalProps> = ({ song, isOpen, onClose }) => {
           <IonTitle>Detail</IonTitle>
           <IonButtons slot="end">
             <IonButton
-              strong={true}
+              size="default"
               onClick={(event) => {
                 event.stopPropagation();
                 modal.current?.dismiss();

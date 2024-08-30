@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import { Media, MediaObject } from "@awesome-cordova-plugins/media";
 import { Capacitor } from "@capacitor/core";
 import { getNativePublicPath } from "../utils/getNativePublicPath";
-import { useAudioContext } from "../contexts/AudioContextProvider";
+import { useGlobalContext } from "../contexts/GlobalContextProvider";
 import {
   loadPreference,
   PreferenceKeys,
@@ -51,7 +51,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
     setMusicVolumePercentage,
     setEffectVolumePercentage,
     adjustVolume,
-  } = useAudioContext();
+  } = useGlobalContext();
   const [loadedVolume, setLoadedVolume] = useState(1.0);
   const [showToast, setShowToast] = useState(false);
 

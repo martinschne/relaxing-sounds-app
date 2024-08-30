@@ -4,7 +4,7 @@ import { Percentage, AudioObject, MediaType } from "../types";
 
 export type StateAction<T> = React.Dispatch<React.SetStateAction<T>>;
 
-interface AudioContextType {
+interface GlobalContextType {
   musicAudio: AudioObject;
   effectAudio: AudioObject;
   setMusicAudio: StateAction<AudioObject>;
@@ -16,10 +16,10 @@ interface AudioContextType {
   adjustVolume: (type: MediaType, volume: Percentage | null) => void;
 }
 
-export const AudioContext = createContext<AudioContextType | null>(null);
+export const GlobalContext = createContext<GlobalContextType | null>(null);
 
 // define context provider as a wrapping component
-export const AudioContextProvider: React.FC<{ children: ReactNode }> = ({
+export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [musicAudio, setMusicAudio] = useState<AudioObject>(null);
@@ -52,7 +52,7 @@ export const AudioContextProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   return (
-    <AudioContext.Provider
+    <GlobalContext.Provider
       value={{
         musicAudio,
         setMusicAudio,
@@ -66,12 +66,12 @@ export const AudioContextProvider: React.FC<{ children: ReactNode }> = ({
       }}
     >
       {children}
-    </AudioContext.Provider>
+    </GlobalContext.Provider>
   );
 };
 
-export const useAudioContext = () => {
-  const context = useContext(AudioContext);
+export const useGlobalContext = () => {
+  const context = useContext(GlobalContext);
   if (!context) {
     throw new Error("useAudio must be used within a AudioContextProvider");
   }

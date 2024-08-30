@@ -6,7 +6,7 @@ import {
   volumeHighOutline,
 } from "ionicons/icons";
 import { useEffect, useState } from "react";
-import { useAudioContext } from "../contexts/AudioContextProvider";
+import { useGlobalContext } from "../contexts/GlobalContextProvider";
 import {
   loadPreference,
   PreferenceKeys,
@@ -43,7 +43,7 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ type, label }) => {
     setMusicVolumePercentage,
     setEffectVolumePercentage,
     adjustVolume,
-  } = useAudioContext();
+  } = useGlobalContext();
 
   const saveVolumePercentage = async (newVolume: Percentage) => {
     // save the new volume level to preferences

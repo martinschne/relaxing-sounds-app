@@ -11,15 +11,15 @@ import {
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import {
-  ellipsisHorizontalOutline,
+  informationCircleOutline,
   musicalNotesOutline,
   optionsOutline,
   waterOutline,
 } from "ionicons/icons";
 import MusicPage from "./pages/MusicPage";
 import EffectsPage from "./pages/EffectsPage";
-import MixerPage from "./pages/MixerPage";
-import MorePage from "./pages/MorePage";
+import SettingsPage from "./pages/SettingsPage";
+import AboutPage from "./pages/AboutPage";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -50,14 +50,14 @@ import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import { AudioContextProvider } from "./contexts/AudioContextProvider";
+import { GlobalContextProvider } from "./contexts/GlobalContextProvider";
 
 setupIonicReact();
 
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
-      <AudioContextProvider>
+      <GlobalContextProvider>
         <IonTabs>
           <IonRouterOutlet>
             <Redirect exact path="/" to="/music" />
@@ -67,8 +67,12 @@ const App: React.FC = () => (
               render={() => <EffectsPage />}
               exact={true}
             />
-            <Route path="/mixer" render={() => <MixerPage />} exact={true} />
-            <Route path="/more" render={() => <MorePage />} exact={true} />
+            <Route
+              path="/settings"
+              render={() => <SettingsPage />}
+              exact={true}
+            />
+            <Route path="/about" render={() => <AboutPage />} exact={true} />
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
             <IonTabButton tab="music" href="/music">
@@ -79,17 +83,17 @@ const App: React.FC = () => (
               <IonIcon aria-hidden="true" icon={waterOutline} />
               <IonLabel>Effects</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="mixer" href="/mixer">
+            <IonTabButton tab="settings" href="/settings">
               <IonIcon aria-hidden="true" icon={optionsOutline} />
-              <IonLabel>Mixer</IonLabel>
+              <IonLabel>Settings</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="more" href="/more">
-              <IonIcon aria-hidden="true" icon={ellipsisHorizontalOutline} />
-              <IonLabel>More</IonLabel>
+            <IonTabButton tab="about" href="/about">
+              <IonIcon aria-hidden="true" icon={informationCircleOutline} />
+              <IonLabel>About</IonLabel>
             </IonTabButton>
           </IonTabBar>
         </IonTabs>
-      </AudioContextProvider>
+      </GlobalContextProvider>
     </IonReactRouter>
   </IonApp>
 );
