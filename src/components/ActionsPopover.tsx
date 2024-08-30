@@ -1,9 +1,5 @@
-import { IonIcon, IonPopover, IonContent, IonList } from "@ionic/react";
-import {
-  ellipsisHorizontalOutline,
-  informationCircleOutline,
-  shareOutline,
-} from "ionicons/icons";
+import { IonPopover, IonContent, IonList } from "@ionic/react";
+import { informationCircleOutline, shareOutline } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import { Song } from "../types";
 import PopoverItem from "./PopoverItem";

@@ -2,7 +2,6 @@ import {
   IonIcon,
   IonItem,
   IonLabel,
-  IonSkeletonText,
   IonThumbnail,
   IonToast,
   useIonViewWillEnter,
@@ -19,7 +18,7 @@ import {
   PreferenceKeys,
   savePreference,
 } from "../utils/preferenceUtils";
-import { formatVolume, getDataByType } from "../utils/formatterUtils";
+import { formatVolume, getDataByType } from "../utils/formattingUtils";
 import { Percentage, MediaType, Song } from "../types";
 import FallbackImage from "./FallbackImage";
 

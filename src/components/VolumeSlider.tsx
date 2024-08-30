@@ -1,11 +1,11 @@
-import { IonItem, IonRange, IonIcon, useIonViewWillEnter } from "@ionic/react";
+import { IonItem, IonRange, IonIcon } from "@ionic/react";
 import {
   volumeMuteOutline,
   volumeLowOutline,
   volumeMediumOutline,
   volumeHighOutline,
 } from "ionicons/icons";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAudioContext } from "../contexts/AudioContextProvider";
 import {
   loadPreference,

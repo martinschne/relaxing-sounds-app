@@ -9,7 +9,6 @@ import {
   IonChip,
   IonContent,
   IonHeader,
-  IonImg,
   IonLabel,
   IonModal,
   IonText,
