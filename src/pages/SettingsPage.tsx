@@ -1,15 +1,11 @@
 import {
   IonContent,
   IonHeader,
-  IonInput,
   IonItem,
   IonLabel,
   IonList,
   IonListHeader,
   IonPage,
-  IonPicker,
-  IonPickerColumn,
-  IonPickerColumnOption,
   IonSelect,
   IonSelectOption,
   IonTitle,
@@ -17,6 +13,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import VolumeSlider from "../components/VolumeSlider";
+import { TrackTypes } from "../types";
 
 const SettingsPage: React.FC = () => {
   return (
@@ -27,22 +24,21 @@ const SettingsPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Settings</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonListHeader>
-          <IonLabel>Volume</IonLabel>
-        </IonListHeader>
         <IonList>
-          <VolumeSlider type="music" label="Music" />
-          <VolumeSlider type="effect" label="Effect" />
+          <IonListHeader>
+            <IonLabel>Volume</IonLabel>
+          </IonListHeader>
+          <IonItem lines="none">
+            <VolumeSlider type={TrackTypes.MUSIC} label="Music" />
+          </IonItem>
+          <IonItem lines="none">
+            <VolumeSlider type={TrackTypes.SOUND} label="Sound" />
+          </IonItem>
         </IonList>
-        <IonListHeader>
-          <IonLabel>Playback</IonLabel>
-        </IonListHeader>
         <IonList>
+          <IonListHeader>
+            <IonLabel>Playback</IonLabel>
+          </IonListHeader>
           <IonItem>
             <IonSelect
               label="Duration"
@@ -65,10 +61,11 @@ const SettingsPage: React.FC = () => {
             </IonToggle>
           </IonItem>
         </IonList>
-        <IonListHeader>
-          <IonLabel>App</IonLabel>
-        </IonListHeader>
+
         <IonList>
+          <IonListHeader>
+            <IonLabel>App</IonLabel>
+          </IonListHeader>
           <IonItem>
             <IonSelect
               label="Language"

@@ -1,12 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
-import { Song } from "../types";
 import {
+  Track,
   cc_by_4_0_international,
   cc_by_3_0,
   cc_1_0_universal,
-} from "../types/LicenseTypes";
+} from "../types";
 
-export const effects: Song[] = [
+export const sounds: Track[] = [
   {
     id: uuidv4(),
     name: "Heavy Rain",

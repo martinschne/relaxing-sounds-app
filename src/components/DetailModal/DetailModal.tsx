@@ -15,14 +15,14 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { Song } from "../types";
+import { Track } from "../../types";
 import { useRef } from "react";
-import FallbackImage from "./FallbackImage";
+import FallbackImage from "../FallbackImage";
 
 import "./DetailModal.css";
 
 interface DetailModalProps {
-  song: Song;
+  song: Track;
   isOpen: boolean;
   onClose: () => void;
 }

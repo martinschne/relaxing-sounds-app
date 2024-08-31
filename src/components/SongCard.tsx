@@ -1,11 +1,11 @@
 import { IonItem, IonThumbnail, IonLabel, IonImg, IonIcon } from "@ionic/react";
 import ActionsPopover from "./ActionsPopover";
-import { Song } from "../types";
+import { Track } from "../types";
 import { ellipsisHorizontalOutline } from "ionicons/icons";
 import FallbackImage from "./FallbackImage";
 
 export interface SongCardProps {
-  song: Song;
+  song: Track;
   onSelect: (id: string) => void;
 }
 

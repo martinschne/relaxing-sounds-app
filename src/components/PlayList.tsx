@@ -4,14 +4,14 @@ import {
   PreferenceKeys,
   savePreference,
 } from "../utils/preferenceUtils";
-import { Song } from "../types";
+import { Track } from "../types";
 import { IonList } from "@ionic/react";
 import SongCard from "./SongCard";
 
 export interface PlayListProps {
-  filtered: Song[];
+  filtered: Track[];
   preferenceKey: PreferenceKeys;
-  setSelected: React.Dispatch<React.SetStateAction<Song | null>>;
+  setSelected: React.Dispatch<React.SetStateAction<Track | null>>;
   setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -21,14 +21,14 @@ const PlayList: React.FC<PlayListProps> = ({
   setSelected,
   setIsPlaying,
 }) => {
-  const saveSelected = async (selected: Song) => {
+  const saveSelected = async (selected: Track) => {
     if (selected) {
-      await savePreference<Song>(preferenceKey, selected);
+      await savePreference<Track>(preferenceKey, selected);
     }
   };
 
   const handleSelectSong = async (id: string) => {
-    const filteredSong = filtered.find((song: Song) => song.id === id);
+    const filteredSong = filtered.find((song: Track) => song.id === id);
     const selected = JSON.parse(JSON.stringify(filteredSong));
     saveSelected(selected);
     setSelected(selected);
@@ -39,7 +39,9 @@ const PlayList: React.FC<PlayListProps> = ({
   useEffect(() => {
     const loadSelectedSong = async () => {
       // Load the saved selected song from storage when the app starts
-      const savedSong: Song | null = await loadPreference<Song>(preferenceKey);
+      const savedSong: Track | null = await loadPreference<Track>(
+        preferenceKey
+      );
       if (savedSong !== null) {
         savedSong.id = "0"; // set as preselected song (don't play)
         setSelected(savedSong);
@@ -56,7 +58,7 @@ const PlayList: React.FC<PlayListProps> = ({
 
   return (
     <IonList>
-      {filtered.map((song: Song) => (
+      {filtered.map((song: Track) => (
         <SongCard key={song.id} song={song} onSelect={handleSelectSong} />
       ))}
     </IonList>

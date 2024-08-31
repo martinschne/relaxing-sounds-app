@@ -7,16 +7,12 @@ import {
 } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useGlobalContext } from "../contexts/GlobalContextProvider";
-import {
-  loadPreference,
-  PreferenceKeys,
-  savePreference,
-} from "../utils/preferenceUtils";
-import { Percentage, MediaType } from "../types";
+import { loadPreference, savePreference } from "../utils/preferenceUtils";
+import { Percentage, TrackTypes, PreferenceKeys } from "../types";
 import { getDataByType } from "../utils";
 
 interface VolumeSliderProps {
-  type: MediaType;
+  type: TrackTypes;
   label: string;
 }
 
@@ -47,11 +43,11 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ type, label }) => {
 
   const saveVolumePercentage = async (newVolume: Percentage) => {
     // save the new volume level to preferences
-    if (type === "music") {
+    if (type === TrackTypes.MUSIC) {
       await savePreference(PreferenceKeys.SONG_VOLUME_PERCENTAGE, newVolume);
       // save volume to context
       setMusicVolumePercentage(newVolume);
-    } else if (type === "effect") {
+    } else if (type === TrackTypes.SOUND) {
       await savePreference(PreferenceKeys.EFFECT_VOLUME_PERCENTAGE, newVolume);
       setEffectVolumePercentage(newVolume);
     }
@@ -73,10 +69,10 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ type, label }) => {
 
   const loadVolumePercentage = async () => {
     let percentage: Percentage | null = null;
-    if (type === "music") {
+    if (type === TrackTypes.MUSIC) {
       percentage = await loadPreference(PreferenceKeys.SONG_VOLUME_PERCENTAGE);
     }
-    if (type === "effect") {
+    if (type === TrackTypes.SOUND) {
       percentage = await loadPreference(
         PreferenceKeys.EFFECT_VOLUME_PERCENTAGE
       );
@@ -96,19 +92,17 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({ type, label }) => {
   }, [...dependencies]);
 
   return (
-    <IonItem>
-      <IonRange
-        id={type}
-        labelPlacement="fixed"
-        label={label}
-        value={volumePercentage}
-        min={0}
-        max={100}
-        onIonChange={handleVolumeChange}
-      >
-        <IonIcon slot="end" icon={volumeIcon}></IonIcon>
-      </IonRange>
-    </IonItem>
+    <IonRange
+      id={type}
+      labelPlacement="fixed"
+      label={label}
+      value={volumePercentage}
+      min={0}
+      max={100}
+      onIonChange={handleVolumeChange}
+    >
+      <IonIcon slot="end" icon={volumeIcon}></IonIcon>
+    </IonRange>
   );
 };
 

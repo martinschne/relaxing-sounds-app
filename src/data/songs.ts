@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 import { cc_by_4_0_international, cc_by_3_0 } from "../types/LicenseTypes";
-import { Song } from "../types";
+import { Track } from "../types";
 
-export const songs: Song[] = [
+export const songs: Track[] = [
   {
     id: uuidv4(),
     name: "Dreamy Piano Melodies",

@@ -3,3 +3,4 @@ export * from "./Range";
 export * from "./MediaTypes";
 export * from "./AudioObject";
 export * from "./LicenseTypes";
+export * from "./PreferenceKeys";

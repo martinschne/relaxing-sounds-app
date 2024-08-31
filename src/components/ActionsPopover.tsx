@@ -1,13 +1,13 @@
 import { IonPopover, IonContent, IonList } from "@ionic/react";
 import { informationCircleOutline, shareOutline } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
-import { Song } from "../types";
+import { Track } from "../types";
 import PopoverItem from "./PopoverItem";
 import { Share } from "@capacitor/share";
-import DetailModal from "./DetailModal";
+import DetailModal from "./DetailModal/DetailModal";
 
 interface ActionsPopoverProps {
-  song: Song;
+  song: Track;
   isOpen?: boolean;
 }
 

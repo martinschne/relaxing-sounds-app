@@ -1,8 +1,11 @@
 import { License } from "./LicenseTypes";
 
-export type MediaType = "music" | "effect";
+export enum TrackTypes {
+  MUSIC = "music",
+  SOUND = "sound",
+}
 
-export interface Song {
+export interface Track {
   id: string;
   name: string;
   artist: string;

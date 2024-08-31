@@ -17,7 +17,7 @@ import {
   waterOutline,
 } from "ionicons/icons";
 import MusicPage from "./pages/MusicPage";
-import EffectsPage from "./pages/EffectsPage";
+import SoundsPage from "./pages/SoundsPage";
 import SettingsPage from "./pages/SettingsPage";
 import AboutPage from "./pages/AboutPage";
 
@@ -61,27 +61,19 @@ const App: React.FC = () => (
         <IonTabs>
           <IonRouterOutlet>
             <Redirect exact path="/" to="/music" />
-            <Route path="/music" render={() => <MusicPage />} exact={true} />
-            <Route
-              path="/effects"
-              render={() => <EffectsPage />}
-              exact={true}
-            />
-            <Route
-              path="/settings"
-              render={() => <SettingsPage />}
-              exact={true}
-            />
-            <Route path="/about" render={() => <AboutPage />} exact={true} />
+            <Route path="/music" render={() => <MusicPage />} exact />
+            <Route path="/sounds" render={() => <SoundsPage />} exact />
+            <Route path="/settings" render={() => <SettingsPage />} exact />
+            <Route path="/about" render={() => <AboutPage />} exact />
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
             <IonTabButton tab="music" href="/music">
               <IonIcon aria-hidden="true" icon={musicalNotesOutline} />
               <IonLabel>Music</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="effects" href="/effects">
+            <IonTabButton tab="sounds" href="/sounds">
               <IonIcon aria-hidden="true" icon={waterOutline} />
-              <IonLabel>Effects</IonLabel>
+              <IonLabel>Sounds</IonLabel>
             </IonTabButton>
             <IonTabButton tab="settings" href="/settings">
               <IonIcon aria-hidden="true" icon={optionsOutline} />

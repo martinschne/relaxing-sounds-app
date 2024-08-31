@@ -7,10 +7,9 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { songs } from "../data/songs";
-import { Song } from "../types";
+import { Track, TrackTypes, PreferenceKeys } from "../types";
 import { useState } from "react";
 import PlayControl from "../components/PlayControl";
-import { PreferenceKeys } from "../utils/preferenceUtils";
 import PlayList from "../components/PlayList";
 import { SearchBar } from "../components/SearchBar";
 
@@ -21,7 +20,7 @@ const MusicPage: React.FC = () => {
   const [filteredSongs, setFilteredSongs] = useState(
     JSON.parse(JSON.stringify(songs))
   );
-  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
+  const [selectedSong, setSelectedSong] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
@@ -55,7 +54,7 @@ const MusicPage: React.FC = () => {
         <PlayControl
           song={selectedSong}
           path={ASSETS_MUSIC_PATH}
-          type="music"
+          type={TrackTypes.MUSIC}
           play={isPlaying}
         />
       </IonFooter>

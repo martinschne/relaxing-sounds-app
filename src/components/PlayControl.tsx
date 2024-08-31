@@ -13,18 +13,14 @@ import { Media, MediaObject } from "@awesome-cordova-plugins/media";
 import { Capacitor } from "@capacitor/core";
 import { getNativePublicPath } from "../utils/getNativePublicPath";
 import { useGlobalContext } from "../contexts/GlobalContextProvider";
-import {
-  loadPreference,
-  PreferenceKeys,
-  savePreference,
-} from "../utils/preferenceUtils";
+import { loadPreference, savePreference } from "../utils/preferenceUtils";
 import { formatVolume, getDataByType } from "../utils/formattingUtils";
-import { Percentage, MediaType, Song } from "../types";
+import { Percentage, TrackTypes, Track, PreferenceKeys } from "../types";
 import FallbackImage from "./FallbackImage";
 
 interface PlayControlProps {
-  song: Song | null;
-  type: MediaType;
+  song: Track | null;
+  type: TrackTypes;
   path: string;
   play: boolean;
 }
@@ -238,13 +234,13 @@ const PlayControl: React.FC<PlayControlProps> = ({
   const handleUnmute = async () => {
     const UNMUTED_VOLUME = 100;
 
-    if (type === "music") {
+    if (type === TrackTypes.MUSIC) {
       await savePreference(
         PreferenceKeys.SONG_VOLUME_PERCENTAGE,
         UNMUTED_VOLUME
       );
       setMusicVolumePercentage(UNMUTED_VOLUME);
-    } else if (type === "effect") {
+    } else if (type === TrackTypes.SOUND) {
       await savePreference(
         PreferenceKeys.EFFECT_VOLUME_PERCENTAGE,
         UNMUTED_VOLUME

@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Song } from "../types";
+import { Track } from "../types";
 import { IonSearchbar } from "@ionic/react";
 
 export interface SearchBarProps {
-  songs: Song[];
-  setFilteredSongs: React.Dispatch<React.SetStateAction<Song[]>>;
+  songs: Track[];
+  setFilteredSongs: React.Dispatch<React.SetStateAction<Track[]>>;
   searchPlaceHolder: string;
 }
 
