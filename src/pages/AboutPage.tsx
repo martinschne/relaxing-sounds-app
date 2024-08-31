@@ -1,23 +1,16 @@
 import {
-  IonAccordion,
-  IonAccordionGroup,
   IonButton,
   IonContent,
   IonFooter,
   IonHeader,
-  IonItem,
-  IonLabel,
   IonPage,
   IonText,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { useState } from "react";
 import CreditsModal from "../components/CreditsModal";
 
 const MorePage: React.FC = () => {
-  const [creditsModalOpen, setCreditsModalOpen] = useState(false);
-
   return (
     <IonPage>
       <IonHeader>

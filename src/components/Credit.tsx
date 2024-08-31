@@ -1,10 +1,4 @@
-import {
-  IonItem,
-  IonItemDivider,
-  IonItemGroup,
-  IonLabel,
-  IonText,
-} from "@ionic/react";
+import { IonItem, IonItemGroup, IonLabel, IonText } from "@ionic/react";
 import { Track } from "../types";
 
 interface CreditProps {

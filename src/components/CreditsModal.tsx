@@ -9,12 +9,8 @@ import {
   IonList,
   IonListHeader,
   IonLabel,
-  IonText,
-  IonItemDivider,
-  IonItemGroup,
   IonNote,
   IonItem,
-  IonFooter,
 } from "@ionic/react";
 import { useRef } from "react";
 
