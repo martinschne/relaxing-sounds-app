@@ -46,14 +46,18 @@ const PlayControl: React.FC<PlayControlProps> = ({
   const [loadedVolume, setLoadedVolume] = useState<number>(getVolumeByType());
   const [showToast, setShowToast] = useState(false);
 
-  const playAudio = (volume?: number) => {
-    setIsPlaying(true);
-    audioObjectRef.current?.play();
+  const playAudio = () => {
+    if (audioObjectRef.current) {
+      setIsPlaying(true);
+      audioObjectRef.current.play();
+    }
   };
 
   const pauseAudio = () => {
-    setIsPlaying(false);
-    audioObjectRef.current?.pause();
+    if (audioObjectRef.current) {
+      setIsPlaying(false);
+      audioObjectRef.current.pause();
+    }
   };
 
   const audioCleanup = () => {
@@ -79,7 +83,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
   };
 
   const adjustVolume = () => {
-    if (audioObjectRef.current === null || !isPlaying) {
+    if (audioObjectRef.current === null) {
       return;
     }
     const newVolume = getVolumeByType();
@@ -94,19 +98,21 @@ const PlayControl: React.FC<PlayControlProps> = ({
   };
 
   const initializeAudio = async () => {
+    if (!track) return;
+
     const trackPath: string = `${path}${track.source}`;
 
     audioCleanup();
-
+    // android/ios for native platform use cordove media plugin
     if (Capacitor.isNativePlatform()) {
       try {
         const nativePath = getNativePublicPath(trackPath);
         audioObjectRef.current = Media.create(nativePath);
         let mediaObject = audioObjectRef.current as MediaObject;
 
+        // loop media after playback ended
         statusUpdateSubscriptionRef.current =
           mediaObject.onStatusUpdate.subscribe((status) => {
-            // restart audio when it ends automatically
             if (status === Media.MEDIA_STOPPED && !isPausedByUser) {
               console.log(
                 `$$ PlayControl init ${type} finished mediaObj: ${JSON.stringify(
@@ -117,44 +123,36 @@ const PlayControl: React.FC<PlayControlProps> = ({
             }
           });
 
-        setTimeout(() => {
-          if (play) {
-            mediaObject.setVolume(loadedVolume);
-            playAudio();
-          }
-        }, 500);
-
         setIsInitialized(true);
       } catch (error) {
         setIsInitialized(false);
         console.error("Error initializing media: ", error);
       }
     } else {
+      // web browser - use Audio API
       try {
         audioObjectRef.current = new Audio(trackPath);
         let audioElement = audioObjectRef.current as HTMLAudioElement;
-
         audioElement.loop = true;
-        audioElement.volume = loadedVolume;
-
-        setTimeout(async () => {
-          if (play) {
-            setIsPlaying(true);
-            await audioElement.play();
-          }
-        }, 500);
-
         setIsInitialized(true);
       } catch (error) {
         setIsInitialized(false);
         console.error("Error playing audio:", error);
       }
     }
+    // autoplay selected track from playlist
+    if (isInitialized) {
+      setTimeout(() => {
+        if (play) {
+          playAudio();
+          adjustVolume();
+        }
+      }, 500);
+    }
   };
 
   useEffect(() => {
     initializeAudio();
-    setShowToast(true);
     return () => {
       audioCleanup();
       if (Capacitor.isNativePlatform()) {
@@ -215,24 +213,23 @@ const PlayControl: React.FC<PlayControlProps> = ({
 
   return (
     <>
-      {showToast && (
-        <IonToast
-          isOpen={showToast && isPlaying && loadedVolume === 0}
-          message="The volume is set to zero"
-          buttons={[
-            {
-              text: "Unmute",
-              handler: handleUnmute,
-            },
-          ]}
-          icon={volumeMuteOutline}
-          position="bottom"
-          positionAnchor={`${type}Footer`}
-          swipeGesture="vertical"
-          duration={5000}
-          onDidDismiss={() => setShowToast(false)}
-        ></IonToast>
-      )}
+      <IonToast
+        isOpen={showToast && isPlaying && loadedVolume === 0}
+        message="The volume is set to zero"
+        buttons={[
+          {
+            text: "Unmute",
+            handler: handleUnmute,
+          },
+        ]}
+        icon={volumeMuteOutline}
+        position="bottom"
+        positionAnchor={`${type}Footer`}
+        swipeGesture="vertical"
+        duration={5000}
+        animated={showToast}
+        onDidDismiss={() => setShowToast(false)}
+      ></IonToast>
       {track && (
         <IonItem>
           <IonThumbnail slot="start">

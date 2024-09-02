@@ -57,7 +57,7 @@ const DetailModal: React.FC<DetailModalProps> = ({ song, isOpen, onClose }) => {
       <IonContent fullscreen>
         <IonCard>
           <FallbackImage
-            id="modal-thumbnail"
+            className="modal-thumbnail"
             src={song.image}
             alt={`Album cover for '${song.name}' by ${song.artist}`}
           />
