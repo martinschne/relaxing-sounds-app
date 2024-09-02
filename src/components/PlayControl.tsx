@@ -13,21 +13,21 @@ import { Media, MediaObject } from "@awesome-cordova-plugins/media";
 import { Capacitor } from "@capacitor/core";
 import { getNativePublicPath } from "../utils/getNativePublicPath";
 import { useGlobalContext } from "../providers/GlobalContextProvider";
-import { TrackTypes, Track, AudioObject } from "../types";
+import { Track, AudioObject, PlaybackSettingKeys } from "../types";
 import FallbackImage from "./FallbackImage";
 
 interface PlayControlProps {
-  track: Track;
-  type: TrackTypes;
+  track: Track | null;
   path: string;
   play: boolean;
+  volumeTypeKey: PlaybackSettingKeys;
 }
 
 const PlayControl: React.FC<PlayControlProps> = ({
   track,
-  type,
   path,
   play,
+  volumeTypeKey,
 }) => {
   const audioObjectRef = useRef<AudioObject>(null);
   const statusUpdateSubscriptionRef = useRef<any>(null);
@@ -38,12 +38,11 @@ const PlayControl: React.FC<PlayControlProps> = ({
 
   const { settings, setSettings } = useGlobalContext();
 
-  const getVolumeByType = (): number => {
-    return type === TrackTypes.MUSIC
-      ? settings.musicVolume
-      : settings.soundVolume;
+  const getVolume = (): number => {
+    return settings[volumeTypeKey] as number;
   };
-  const [loadedVolume, setLoadedVolume] = useState<number>(getVolumeByType());
+
+  const [loadedVolume, setLoadedVolume] = useState(getVolume());
   const [showToast, setShowToast] = useState(false);
 
   const playAudio = () => {
@@ -86,7 +85,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
     if (audioObjectRef.current === null) {
       return;
     }
-    const newVolume = getVolumeByType();
+    const newVolume = getVolume();
 
     if (Capacitor.isNativePlatform()) {
       const mediaObject = audioObjectRef.current as MediaObject;
@@ -114,11 +113,6 @@ const PlayControl: React.FC<PlayControlProps> = ({
         statusUpdateSubscriptionRef.current =
           mediaObject.onStatusUpdate.subscribe((status) => {
             if (status === Media.MEDIA_STOPPED && !isPausedByUser) {
-              console.log(
-                `$$ PlayControl init ${type} finished mediaObj: ${JSON.stringify(
-                  mediaObject
-                )}`
-              );
               playAudio();
             }
           });
@@ -164,7 +158,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
   }, [track]);
 
   useEffect(() => {
-    setLoadedVolume(getVolumeByType());
+    setLoadedVolume(getVolume());
     adjustVolume();
   }, [settings.musicVolume, settings.soundVolume]);
 
@@ -194,21 +188,12 @@ const PlayControl: React.FC<PlayControlProps> = ({
   const handleUnmute = async () => {
     const UNMUTED_VOLUME = 1.0;
 
-    if (type === TrackTypes.MUSIC) {
-      setSettings((prevSettings) => {
-        return {
-          ...prevSettings,
-          musicVolume: UNMUTED_VOLUME,
-        };
-      });
-    } else if (type === TrackTypes.SOUND) {
-      setSettings((prevSettings) => {
-        return {
-          ...prevSettings,
-          soundVolume: UNMUTED_VOLUME,
-        };
-      });
-    }
+    setSettings((prevSettings) => {
+      return {
+        ...prevSettings,
+        [volumeTypeKey]: UNMUTED_VOLUME,
+      };
+    });
   };
 
   return (
@@ -223,8 +208,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
           },
         ]}
         icon={volumeMuteOutline}
-        position="bottom"
-        positionAnchor={`${type}Footer`}
+        position="top"
         swipeGesture="vertical"
         duration={5000}
         animated={showToast}

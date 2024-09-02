@@ -5,13 +5,14 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { Track, TrackTypes, PreferenceKeys } from "../types";
+import { PlaybackSettingKeys } from "../types";
 import { sounds } from "../data/sounds";
 import { useState } from "react";
 import { SearchBar } from "../components/SearchBar";
 import { IonFooter } from "@ionic/react";
 import PlayList from "../components/PlayList";
 import PlayControl from "../components/PlayControl";
+import { useGlobalContext } from "../providers/GlobalContextProvider";
 
 const SoundsPage: React.FC = () => {
   const ASSETS_SOUNDS_PATH = "/assets/sounds/";
@@ -20,7 +21,7 @@ const SoundsPage: React.FC = () => {
   const [filteredSounds, setFilteredSounds] = useState(
     JSON.parse(JSON.stringify(sounds))
   );
-  const [selectedSound, setSelectedSound] = useState<Track | null>(null);
+  const { settings } = useGlobalContext();
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
@@ -45,18 +46,17 @@ const SoundsPage: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <PlayList
-          filtered={filteredSounds}
-          preferenceKey={PreferenceKeys.SELECTED_EFFECT}
-          setSelected={setSelectedSound}
+          filteredTracks={filteredSounds}
+          selectedTrackKey={PlaybackSettingKeys.SELECTED_SOUND}
           setIsPlaying={setIsPlaying}
         />
       </IonContent>
       <IonFooter id="soundFooter">
         <PlayControl
-          track={selectedSound}
+          track={settings.selectedSound}
           path={ASSETS_SOUNDS_PATH}
-          type={TrackTypes.SOUND}
           play={isPlaying}
+          volumeTypeKey={PlaybackSettingKeys.SOUND_VOLUME}
         />
       </IonFooter>
     </IonPage>

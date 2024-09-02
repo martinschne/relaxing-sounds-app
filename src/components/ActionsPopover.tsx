@@ -8,10 +8,9 @@ import DetailModal from "./DetailModal/DetailModal";
 
 interface ActionsPopoverProps {
   song: Track;
-  isOpen?: boolean;
 }
 
-const ActionsPopover: React.FC<ActionsPopoverProps> = ({ song, isOpen }) => {
+const ActionsPopover: React.FC<ActionsPopoverProps> = ({ song }) => {
   const actionsPopover = useRef<HTMLIonPopoverElement>(null);
 
   const [detailModalOpen, setDetailModalOpen] = useState(false);

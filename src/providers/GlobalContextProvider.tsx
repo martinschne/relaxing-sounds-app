@@ -8,6 +8,8 @@ import {
 } from "react";
 import { Settings } from "../types";
 import { loadPreference, savePreference } from "../utils";
+import { songs } from "../data/songs";
+import { sounds } from "../data/sounds";
 
 export type StateAction<T> = React.Dispatch<React.SetStateAction<T>>;
 
@@ -29,6 +31,8 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
     playWhenLocked: true,
     language: "english",
     theme: "system",
+    selectedSong: songs[0],
+    selectedSound: sounds[0],
   };
 
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
