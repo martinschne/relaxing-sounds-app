@@ -5,7 +5,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { PlaybackSettingKeys } from "../types";
+import { SettingsKeys } from "../types";
 import { sounds } from "../data/sounds";
 import { useState } from "react";
 import { SearchBar } from "../components/SearchBar";
@@ -47,7 +47,7 @@ const SoundsPage: React.FC = () => {
         </IonHeader>
         <PlayList
           filteredTracks={filteredSounds}
-          selectedTrackKey={PlaybackSettingKeys.SELECTED_SOUND}
+          selectedTrackKey={SettingsKeys.SELECTED_SOUND}
           setIsPlaying={setIsPlaying}
         />
       </IonContent>
@@ -56,7 +56,7 @@ const SoundsPage: React.FC = () => {
           track={settings.selectedSound}
           path={ASSETS_SOUNDS_PATH}
           play={isPlaying}
-          volumeTypeKey={PlaybackSettingKeys.SOUND_VOLUME}
+          volumeTypeKey={SettingsKeys.SOUND_VOLUME}
         />
       </IonFooter>
     </IonPage>

@@ -14,63 +14,39 @@ import {
 } from "@ionic/react";
 import VolumeSlider from "../components/VolumeSlider";
 import { useGlobalContext } from "../providers/GlobalContextProvider";
+import { SettingsKeys } from "../types";
 
 const SettingsPage: React.FC = () => {
-  const { settings, setSettings } = useGlobalContext();
+  const { settings, saveSettings } = useGlobalContext();
 
   const handleMusicVolumeChange = (event: CustomEvent) => {
-    console.log("Music volume CHANGED, now is: " + event.detail.value);
-    setSettings((prevSettings) => {
-      return {
-        ...prevSettings,
-        musicVolume: event.detail.value,
-      };
-    });
+    const updatedMusicVolume = event.detail.value;
+    saveSettings(SettingsKeys.MUSIC_VOLUME, updatedMusicVolume);
   };
 
   const handleSoundVolumeChange = (event: CustomEvent) => {
-    setSettings((prevSettings) => {
-      return {
-        ...prevSettings,
-        soundVolume: event.detail.value,
-      };
-    });
+    const updatedSoundVolume = event.detail.value;
+    saveSettings(SettingsKeys.SOUND_VOLUME, updatedSoundVolume);
   };
 
   const handleDurationChange = (event: CustomEvent) => {
-    setSettings((prevSettings) => {
-      return {
-        ...prevSettings,
-        duration: event.detail.value,
-      };
-    });
+    const selectedDuration = event.detail.value;
+    saveSettings(SettingsKeys.DURATION, selectedDuration);
   };
 
   const handlePlayWhenLockedChange = (event: CustomEvent) => {
-    setSettings((prevSettings) => {
-      return {
-        ...prevSettings,
-        playWhenLocked: event.detail.checked,
-      };
-    });
+    const playWhenLockedState = event.detail.checked;
+    saveSettings(SettingsKeys.PLAY_WHEN_LOCKED, playWhenLockedState);
   };
 
   const handleLanguageChange = (event: CustomEvent) => {
-    setSettings((prevSettings) => {
-      return {
-        ...prevSettings,
-        language: event.detail.value,
-      };
-    });
+    const selectedLanguage = event.detail.value;
+    saveSettings(SettingsKeys.LANGUAGE, selectedLanguage);
   };
 
   const handleThemeChange = (event: CustomEvent) => {
-    setSettings((prevSettings) => {
-      return {
-        ...prevSettings,
-        theme: event.detail.value,
-      };
-    });
+    const selectedTheme = event.detail.value;
+    saveSettings(SettingsKeys.LANGUAGE, selectedTheme);
   };
 
   return (

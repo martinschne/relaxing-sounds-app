@@ -13,14 +13,14 @@ import { Media, MediaObject } from "@awesome-cordova-plugins/media";
 import { Capacitor } from "@capacitor/core";
 import { getNativePublicPath } from "../utils/getNativePublicPath";
 import { useGlobalContext } from "../providers/GlobalContextProvider";
-import { Track, AudioObject, PlaybackSettingKeys } from "../types";
+import { Track, AudioObject, SettingsKeys } from "../types";
 import FallbackImage from "./FallbackImage";
 
 interface PlayControlProps {
   track: Track | null;
   path: string;
   play: boolean;
-  volumeTypeKey: PlaybackSettingKeys;
+  volumeTypeKey: SettingsKeys;
 }
 
 const PlayControl: React.FC<PlayControlProps> = ({
@@ -36,7 +36,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
   const [isInitialized, setIsInitialized] = useState<Boolean>(false);
   const [isPausedByUser, setIsPausedByUser] = useState<Boolean>(false);
 
-  const { settings, setSettings } = useGlobalContext();
+  const { settings, saveSettings } = useGlobalContext();
 
   const getVolume = (): number => {
     return settings[volumeTypeKey] as number;
@@ -187,13 +187,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
 
   const handleUnmute = async () => {
     const UNMUTED_VOLUME = 1.0;
-
-    setSettings((prevSettings) => {
-      return {
-        ...prevSettings,
-        [volumeTypeKey]: UNMUTED_VOLUME,
-      };
-    });
+    saveSettings(volumeTypeKey, UNMUTED_VOLUME);
   };
 
   return (

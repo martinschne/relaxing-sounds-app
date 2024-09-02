@@ -1,11 +1,11 @@
-import { Track, PlaybackSettingKeys } from "../types";
+import { Track, SettingsKeys } from "../types";
 import { IonList } from "@ionic/react";
 import SongCard from "./SongCard";
 import { useGlobalContext } from "../providers/GlobalContextProvider";
 
 export interface PlayListProps {
   filteredTracks: Track[];
-  selectedTrackKey: PlaybackSettingKeys;
+  selectedTrackKey: SettingsKeys;
   setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -14,15 +14,10 @@ const PlayList: React.FC<PlayListProps> = ({
   selectedTrackKey,
   setIsPlaying,
 }) => {
-  const { settings, setSettings } = useGlobalContext();
+  const { settings, saveSettings } = useGlobalContext();
 
   const saveSelectedTrack = (selectedTrack: Track) => {
-    setSettings((prevSettings) => {
-      return {
-        ...prevSettings,
-        [selectedTrackKey]: selectedTrack,
-      };
-    });
+    saveSettings(selectedTrackKey, selectedTrack);
   };
 
   const handleSelectSong = async (id: string) => {
