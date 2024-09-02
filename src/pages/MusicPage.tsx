@@ -18,7 +18,7 @@ const MusicPage: React.FC = () => {
   const MUSIC_SEARCH_PLACEHOLDER = "Search by name, artist or tag";
 
   const [filteredSongs, setFilteredSongs] = useState(
-    JSON.parse(JSON.stringify(songs))
+    JSON.parse(JSON.stringify(songs)),
   );
   const [selectedSong, setSelectedSong] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -52,7 +52,7 @@ const MusicPage: React.FC = () => {
       </IonContent>
       <IonFooter id="musicFooter">
         <PlayControl
-          song={selectedSong}
+          track={selectedSong}
           path={ASSETS_MUSIC_PATH}
           type={TrackTypes.MUSIC}
           play={isPlaying}

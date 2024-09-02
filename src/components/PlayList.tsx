@@ -1,10 +1,6 @@
 import { useEffect } from "react";
-import {
-  loadPreference,
-  PreferenceKeys,
-  savePreference,
-} from "../utils/preferenceUtils";
-import { Track } from "../types";
+import { loadPreference, savePreference } from "../utils/preferenceUtils";
+import { Track, PreferenceKeys } from "../types";
 import { IonList } from "@ionic/react";
 import SongCard from "./SongCard";
 
@@ -39,9 +35,8 @@ const PlayList: React.FC<PlayListProps> = ({
   useEffect(() => {
     const loadSelectedSong = async () => {
       // Load the saved selected song from storage when the app starts
-      const savedSong: Track | null = await loadPreference<Track>(
-        preferenceKey
-      );
+      const savedSong: Track | null =
+        await loadPreference<Track>(preferenceKey);
       if (savedSong !== null) {
         savedSong.id = "0"; // set as preselected song (don't play)
         setSelected(savedSong);

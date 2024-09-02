@@ -12,215 +12,177 @@ import { useEffect, useRef, useState } from "react";
 import { Media, MediaObject } from "@awesome-cordova-plugins/media";
 import { Capacitor } from "@capacitor/core";
 import { getNativePublicPath } from "../utils/getNativePublicPath";
-import { useGlobalContext } from "../contexts/GlobalContextProvider";
-import { loadPreference, savePreference } from "../utils/preferenceUtils";
-import { formatVolume, getDataByType } from "../utils/formattingUtils";
-import { Percentage, TrackTypes, Track, PreferenceKeys } from "../types";
+import { useGlobalContext } from "../providers/GlobalContextProvider";
+import { TrackTypes, Track, AudioObject } from "../types";
 import FallbackImage from "./FallbackImage";
 
 interface PlayControlProps {
-  song: Track | null;
+  track: Track;
   type: TrackTypes;
   path: string;
   play: boolean;
 }
 
 const PlayControl: React.FC<PlayControlProps> = ({
-  song,
-  path,
+  track,
   type,
+  path,
   play,
 }) => {
-  const songMediaObjectRef = useRef<MediaObject | null>(null);
-  const songAudioElementRef = useRef<HTMLAudioElement | null>(null);
-  const statusUpdateSubscription = useRef<any>(null);
+  const audioObjectRef = useRef<AudioObject>(null);
+  const statusUpdateSubscriptionRef = useRef<any>(null);
 
   const [isPlaying, setIsPlaying] = useState<Boolean>(false);
   const [isInitialized, setIsInitialized] = useState<Boolean>(false);
   const [isPausedByUser, setIsPausedByUser] = useState<Boolean>(false);
 
-  const {
-    setMusicAudio,
-    setEffectAudio,
-    musicVolumePercentage,
-    effectVolumePercentage,
-    setMusicVolumePercentage,
-    setEffectVolumePercentage,
-    adjustVolume,
-  } = useGlobalContext();
-  const [loadedVolume, setLoadedVolume] = useState(1.0);
+  const { settings, setSettings } = useGlobalContext();
+
+  const getVolumeByType = (): number => {
+    return type === TrackTypes.MUSIC
+      ? settings.musicVolume
+      : settings.soundVolume;
+  };
+  const [loadedVolume, setLoadedVolume] = useState<number>(getVolumeByType());
   const [showToast, setShowToast] = useState(false);
 
-  let setAudio = getDataByType(type, setMusicAudio, setEffectAudio);
-
-  const loadPreferences = async () => {
-    let volumePreferenceKey = getDataByType(
-      type,
-      PreferenceKeys.SONG_VOLUME_PERCENTAGE,
-      PreferenceKeys.EFFECT_VOLUME_PERCENTAGE
-    );
-    console.log("$$ PreferenceKey " + volumePreferenceKey);
-    const percentage: Percentage =
-      (await loadPreference(volumePreferenceKey)) ?? 100;
-    console.log(
-      "$$ PlayControl: loaded percentage for " + type + " is" + percentage
-    );
-    const volume = formatVolume(percentage);
-    console.log("$$ PlayControl: loaded volume for " + type + " is " + volume);
-    setLoadedVolume(volume);
+  const playAudio = (volume?: number) => {
+    setIsPlaying(true);
+    audioObjectRef.current?.play();
   };
 
-  const initializeAudio = async () => {
-    // load volume preferences
-    await loadPreferences();
+  const pauseAudio = () => {
+    setIsPlaying(false);
+    audioObjectRef.current?.pause();
+  };
 
-    if (!song || !song.source || !path) {
+  const audioCleanup = () => {
+    // do not clean up empty object
+    if (audioObjectRef.current === null) {
       return;
     }
 
-    const songPath: string = `${path}${song.source}`;
+    if (audioObjectRef.current instanceof MediaObject) {
+      const mediaObject = audioObjectRef.current as MediaObject;
+      mediaObject.stop();
+      mediaObject.release();
+      console.log("removing media object");
+    } else if (audioObjectRef.current instanceof HTMLAudioElement) {
+      const audioElement = audioObjectRef.current as HTMLAudioElement;
+      audioElement.pause();
+      audioElement.src = "";
+      audioElement.load();
+      console.log("removing audio object");
+    }
+
+    audioObjectRef.current = null;
+  };
+
+  const adjustVolume = () => {
+    if (audioObjectRef.current === null || !isPlaying) {
+      return;
+    }
+    const newVolume = getVolumeByType();
 
     if (Capacitor.isNativePlatform()) {
-      // Cleanup previous media object if it exists
-      if (songMediaObjectRef.current) {
-        console.log(
-          "$$ songMediaObjectRef is" +
-            JSON.stringify(songMediaObjectRef.current)
-        );
-        songMediaObjectRef.current.stop();
-        songMediaObjectRef.current.release();
-        songMediaObjectRef.current = null;
-      }
-      try {
-        const nativePath = getNativePublicPath(songPath);
-        songMediaObjectRef.current = Media.create(nativePath);
-        console.log(
-          "$$ media created: " + JSON.stringify(songMediaObjectRef.current)
-        );
-        setAudio(songMediaObjectRef.current);
+      const mediaObject = audioObjectRef.current as MediaObject;
+      mediaObject.setVolume(newVolume);
+    } else {
+      const htmlAudioElement = audioObjectRef.current as HTMLMediaElement;
+      htmlAudioElement.volume = newVolume;
+    }
+  };
 
-        statusUpdateSubscription.current =
-          songMediaObjectRef.current.onStatusUpdate.subscribe((status) => {
+  const initializeAudio = async () => {
+    const trackPath: string = `${path}${track.source}`;
+
+    audioCleanup();
+
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const nativePath = getNativePublicPath(trackPath);
+        audioObjectRef.current = Media.create(nativePath);
+        let mediaObject = audioObjectRef.current as MediaObject;
+
+        statusUpdateSubscriptionRef.current =
+          mediaObject.onStatusUpdate.subscribe((status) => {
             // restart audio when it ends automatically
             if (status === Media.MEDIA_STOPPED && !isPausedByUser) {
               console.log(
                 `$$ PlayControl init ${type} finished mediaObj: ${JSON.stringify(
-                  songMediaObjectRef.current
+                  mediaObject
                 )}`
               );
-              songMediaObjectRef.current?.play();
+              playAudio();
             }
           });
 
         setTimeout(() => {
           if (play) {
-            setIsPlaying(true);
-            console.log(
-              "$$ store media obj in audio ctx: " +
-                JSON.stringify(songMediaObjectRef.current)
-            );
-            songMediaObjectRef.current?.play();
-            songMediaObjectRef.current?.setVolume(loadedVolume);
+            mediaObject.setVolume(loadedVolume);
+            playAudio();
           }
         }, 500);
 
         setIsInitialized(true);
       } catch (error) {
+        setIsInitialized(false);
         console.error("Error initializing media: ", error);
       }
     } else {
-      // Cleanup previous audio element if it exists
-      if (songAudioElementRef.current) {
-        songAudioElementRef.current.pause();
-        songAudioElementRef.current.src = "";
-        songAudioElementRef.current.load();
-        songAudioElementRef.current = null;
-        setAudio(null);
-      }
-
       try {
-        songAudioElementRef.current = new Audio(songPath);
-        songAudioElementRef.current.loop = true;
-        songAudioElementRef.current.volume = loadedVolume;
-        setAudio(songAudioElementRef.current);
+        audioObjectRef.current = new Audio(trackPath);
+        let audioElement = audioObjectRef.current as HTMLAudioElement;
+
+        audioElement.loop = true;
+        audioElement.volume = loadedVolume;
 
         setTimeout(async () => {
           if (play) {
             setIsPlaying(true);
-            await songAudioElementRef.current?.play();
+            await audioElement.play();
           }
         }, 500);
 
         setIsInitialized(true);
       } catch (error) {
-        console.error("Error playing audio:", error);
         setIsInitialized(false);
+        console.error("Error playing audio:", error);
       }
     }
   };
 
   useEffect(() => {
-    console.log("Useffect: play is is set to " + play);
-    console.log("Useffect: song.image is " + song?.image);
     initializeAudio();
-    setShowToast(true); // reshow the toast for new song played
+    setShowToast(true);
     return () => {
+      audioCleanup();
       if (Capacitor.isNativePlatform()) {
-        if (statusUpdateSubscription.current) {
-          statusUpdateSubscription.current.unsubscribe();
-        }
-        // Cleanup for native audio
-        if (songMediaObjectRef.current) {
-          songMediaObjectRef.current.stop();
-          songMediaObjectRef.current.release();
-          songMediaObjectRef.current = null;
-        }
-      } else {
-        // Cleanup for web audio
-        if (songAudioElementRef.current) {
-          songAudioElementRef.current.pause();
-          songAudioElementRef.current.src = "";
-          songAudioElementRef.current.load();
-          songAudioElementRef.current = null;
+        if (statusUpdateSubscriptionRef.current) {
+          statusUpdateSubscriptionRef.current.unsubscribe();
         }
       }
     };
-  }, [song?.source]);
+  }, [track]);
 
   useEffect(() => {
-    loadPreferences();
-  }, [musicVolumePercentage, effectVolumePercentage]);
+    setLoadedVolume(getVolumeByType());
+    adjustVolume();
+  }, [settings.musicVolume, settings.soundVolume]);
 
   const handlePlayClick = async () => {
-    setIsPlaying(true);
-    setShowToast(true);
-
     if (!isInitialized) {
       await initializeAudio();
     }
-    if (Capacitor.isNativePlatform()) {
-      songMediaObjectRef.current?.play();
-      console.log(
-        "$$ PlayControl clicked play button, volume: " + loadedVolume
-      );
-      songMediaObjectRef.current?.setVolume(loadedVolume);
-    } else {
-      if (songAudioElementRef.current !== null) {
-        songAudioElementRef.current.volume = loadedVolume;
-      }
-      await songAudioElementRef.current?.play();
-    }
+    playAudio();
+    setShowToast(true);
   };
 
   const handlePauseClick = () => {
-    setIsPlaying(false);
-
     if (Capacitor.isNativePlatform()) {
       setIsPausedByUser(true);
-      songMediaObjectRef.current?.pause();
-    } else {
-      songAudioElementRef.current?.pause();
     }
+    pauseAudio();
   };
 
   useIonViewWillEnter(() => {
@@ -232,23 +194,23 @@ const PlayControl: React.FC<PlayControlProps> = ({
   });
 
   const handleUnmute = async () => {
-    const UNMUTED_VOLUME = 100;
+    const UNMUTED_VOLUME = 1.0;
 
     if (type === TrackTypes.MUSIC) {
-      await savePreference(
-        PreferenceKeys.SONG_VOLUME_PERCENTAGE,
-        UNMUTED_VOLUME
-      );
-      setMusicVolumePercentage(UNMUTED_VOLUME);
+      setSettings((prevSettings) => {
+        return {
+          ...prevSettings,
+          musicVolume: UNMUTED_VOLUME,
+        };
+      });
     } else if (type === TrackTypes.SOUND) {
-      await savePreference(
-        PreferenceKeys.EFFECT_VOLUME_PERCENTAGE,
-        UNMUTED_VOLUME
-      );
-      setEffectVolumePercentage(UNMUTED_VOLUME);
+      setSettings((prevSettings) => {
+        return {
+          ...prevSettings,
+          soundVolume: UNMUTED_VOLUME,
+        };
+      });
     }
-    adjustVolume(type, UNMUTED_VOLUME);
-    setLoadedVolume(formatVolume(UNMUTED_VOLUME));
   };
 
   return (
@@ -271,15 +233,15 @@ const PlayControl: React.FC<PlayControlProps> = ({
           onDidDismiss={() => setShowToast(false)}
         ></IonToast>
       )}
-      {song && (
+      {track && (
         <IonItem>
           <IonThumbnail slot="start">
             <FallbackImage
-              src={song.image}
-              alt={`Album cover for '${song.name}' by ${song.artist}`}
+              src={track.image}
+              alt={`Album cover for '${track.name}' by ${track.artist}`}
             />
           </IonThumbnail>
-          <IonLabel>{song.name}</IonLabel>
+          <IonLabel>{track.name}</IonLabel>
           {isPlaying ? (
             <IonIcon
               icon={pauseOutline}

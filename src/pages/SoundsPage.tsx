@@ -51,9 +51,9 @@ const SoundsPage: React.FC = () => {
           setIsPlaying={setIsPlaying}
         />
       </IonContent>
-      <IonFooter id="effectFooter">
+      <IonFooter id="soundFooter">
         <PlayControl
-          song={selectedSound}
+          track={selectedSound}
           path={ASSETS_SOUNDS_PATH}
           type={TrackTypes.SOUND}
           play={isPlaying}

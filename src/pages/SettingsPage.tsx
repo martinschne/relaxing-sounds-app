@@ -13,9 +13,66 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import VolumeSlider from "../components/VolumeSlider";
-import { TrackTypes } from "../types";
+import { useGlobalContext } from "../providers/GlobalContextProvider";
 
 const SettingsPage: React.FC = () => {
+  const { settings, setSettings } = useGlobalContext();
+
+  const handleMusicVolumeChange = (event: CustomEvent) => {
+    console.log("Music volume CHANGED, now is: " + event.detail.value);
+    setSettings((prevSettings) => {
+      return {
+        ...prevSettings,
+        musicVolume: event.detail.value,
+      };
+    });
+  };
+
+  const handleSoundVolumeChange = (event: CustomEvent) => {
+    setSettings((prevSettings) => {
+      return {
+        ...prevSettings,
+        soundVolume: event.detail.value,
+      };
+    });
+  };
+
+  const handleDurationChange = (event: CustomEvent) => {
+    setSettings((prevSettings) => {
+      return {
+        ...prevSettings,
+        duration: event.detail.value,
+      };
+    });
+  };
+
+  const handlePlayWhenLockedChange = (event: CustomEvent) => {
+    setSettings((prevSettings) => {
+      return {
+        ...prevSettings,
+        playWhenLocked: event.detail.checked,
+      };
+    });
+  };
+
+  const handleLanguageChange = (event: CustomEvent) => {
+    setSettings((prevSettings) => {
+      return {
+        ...prevSettings,
+        language: event.detail.value,
+      };
+    });
+  };
+
+  const handleThemeChange = (event: CustomEvent) => {
+    setSettings((prevSettings) => {
+      return {
+        ...prevSettings,
+        theme: event.detail.value,
+      };
+    });
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -29,10 +86,18 @@ const SettingsPage: React.FC = () => {
             <IonLabel>Volume</IonLabel>
           </IonListHeader>
           <IonItem lines="none">
-            <VolumeSlider type={TrackTypes.MUSIC} label="Music" />
+            <VolumeSlider
+              label="Music"
+              volume={settings.musicVolume}
+              onVolumeChange={handleMusicVolumeChange}
+            />
           </IonItem>
           <IonItem lines="none">
-            <VolumeSlider type={TrackTypes.SOUND} label="Sound" />
+            <VolumeSlider
+              label="Sound"
+              volume={settings.soundVolume}
+              onVolumeChange={handleSoundVolumeChange}
+            />
           </IonItem>
         </IonList>
         <IonList>
@@ -46,7 +111,8 @@ const SettingsPage: React.FC = () => {
               aria-label="duration"
               placeholder="Select duration"
               interface="popover"
-              value={"nonstop"}
+              value={settings.duration}
+              onIonChange={handleDurationChange}
             >
               <IonSelectOption value="5">5 min</IonSelectOption>
               <IonSelectOption value="15">15 min</IonSelectOption>
@@ -56,12 +122,16 @@ const SettingsPage: React.FC = () => {
             </IonSelect>
           </IonItem>
           <IonItem>
-            <IonToggle checked justify="space-between" alignment="center">
+            <IonToggle
+              justify="space-between"
+              alignment="center"
+              checked={settings.playWhenLocked}
+              onIonChange={handlePlayWhenLockedChange}
+            >
               Play When Locked
             </IonToggle>
           </IonItem>
         </IonList>
-
         <IonList>
           <IonListHeader>
             <IonLabel>App</IonLabel>
@@ -73,7 +143,8 @@ const SettingsPage: React.FC = () => {
               aria-label="language"
               placeholder="Select language"
               interface="popover"
-              value={"english"}
+              value={settings.language}
+              onIonChange={handleLanguageChange}
             >
               <IonSelectOption value="english">English</IonSelectOption>
               <IonSelectOption value="german">German</IonSelectOption>
@@ -88,7 +159,8 @@ const SettingsPage: React.FC = () => {
               aria-label="theme"
               placeholder="Select theme"
               interface="popover"
-              value={"system"}
+              value={settings.theme}
+              onIonChange={handleThemeChange}
             >
               <IonSelectOption value="system">System</IonSelectOption>
               <IonSelectOption value="light">Light</IonSelectOption>
