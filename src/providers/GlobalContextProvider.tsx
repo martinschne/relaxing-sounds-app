@@ -7,7 +7,7 @@ import {
   useRef,
 } from "react";
 import { Settings } from "../types";
-import { loadPreference, savePreference } from "../utils";
+import { PreferencesService } from "../services/PreferencesService";
 import { songs } from "../data/songs";
 import { sounds } from "../data/sounds";
 
@@ -52,7 +52,9 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     const loadSettings = async () => {
-      const loadedSettings = (await loadPreference("settings")) as Settings;
+      const loadedSettings = (await PreferencesService.loadPreference(
+        "settings"
+      )) as Settings;
       if (loadedSettings !== null) {
         console.log("Settings are loaded now" + JSON.stringify(loadedSettings));
         setSettings(loadedSettings);
@@ -72,7 +74,7 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
       return;
     }
     const saveSettings = async () => {
-      await savePreference("settings", settings);
+      await PreferencesService.savePreference("settings", settings);
     };
 
     saveSettings().then(() => {

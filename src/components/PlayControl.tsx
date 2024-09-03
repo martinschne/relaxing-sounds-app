@@ -8,13 +8,11 @@ import {
   useIonViewWillLeave,
 } from "@ionic/react";
 import { pauseOutline, playOutline, volumeMuteOutline } from "ionicons/icons";
-import { useEffect, useRef, useState } from "react";
-import { Media, MediaObject } from "@awesome-cordova-plugins/media";
-import { Capacitor } from "@capacitor/core";
-import { getNativePublicPath } from "../utils/getNativePublicPath";
-import { useGlobalContext } from "../providers/GlobalContextProvider";
-import { Track, AudioObject, SettingsKeys } from "../types";
+import { useState } from "react";
+import { Track, SettingsKeys } from "../types";
 import FallbackImage from "./FallbackImage";
+import { useGlobalContext } from "../providers/GlobalContextProvider";
+import { useAudioPlayer } from "../hooks/useAudioPlayer";
 
 interface PlayControlProps {
   track: Track | null;
@@ -29,152 +27,25 @@ const PlayControl: React.FC<PlayControlProps> = ({
   play,
   volumeTypeKey,
 }) => {
-  const audioObjectRef = useRef<AudioObject>(null);
-  const statusUpdateSubscriptionRef = useRef<any>(null);
+  const { isPlaying, playAudio, pauseAudio, setIsPausedByUser } =
+    useAudioPlayer(track, path, play, volumeTypeKey);
 
-  const [isPlaying, setIsPlaying] = useState<Boolean>(false);
-  const [isInitialized, setIsInitialized] = useState<Boolean>(false);
-  const [isPausedByUser, setIsPausedByUser] = useState<Boolean>(false);
-
+  const [showToast, setShowToast] = useState(false);
   const { settings, saveSettings } = useGlobalContext();
 
-  const getVolume = (): number => {
-    return settings[volumeTypeKey] as number;
-  };
-
-  const [loadedVolume, setLoadedVolume] = useState(getVolume());
-  const [showToast, setShowToast] = useState(false);
-
-  const playAudio = () => {
-    if (audioObjectRef.current) {
-      setIsPlaying(true);
-      audioObjectRef.current.play();
-    }
-  };
-
-  const pauseAudio = () => {
-    if (audioObjectRef.current) {
-      setIsPlaying(false);
-      audioObjectRef.current.pause();
-    }
-  };
-
-  const audioCleanup = () => {
-    // do not clean up empty object
-    if (audioObjectRef.current === null) {
-      return;
-    }
-
-    if (audioObjectRef.current instanceof MediaObject) {
-      const mediaObject = audioObjectRef.current as MediaObject;
-      mediaObject.stop();
-      mediaObject.release();
-      console.log("removing media object");
-    } else if (audioObjectRef.current instanceof HTMLAudioElement) {
-      const audioElement = audioObjectRef.current as HTMLAudioElement;
-      audioElement.pause();
-      audioElement.src = "";
-      audioElement.load();
-      console.log("removing audio object");
-    }
-
-    audioObjectRef.current = null;
-  };
-
-  const adjustVolume = () => {
-    if (audioObjectRef.current === null) {
-      return;
-    }
-    const newVolume = getVolume();
-
-    if (Capacitor.isNativePlatform()) {
-      const mediaObject = audioObjectRef.current as MediaObject;
-      mediaObject.setVolume(newVolume);
-    } else {
-      const htmlAudioElement = audioObjectRef.current as HTMLMediaElement;
-      htmlAudioElement.volume = newVolume;
-    }
-  };
-
-  const initializeAudio = async () => {
-    if (!track) return;
-
-    const trackPath: string = `${path}${track.source}`;
-
-    audioCleanup();
-    // android/ios for native platform use cordove media plugin
-    if (Capacitor.isNativePlatform()) {
-      try {
-        const nativePath = getNativePublicPath(trackPath);
-        audioObjectRef.current = Media.create(nativePath);
-        let mediaObject = audioObjectRef.current as MediaObject;
-
-        // loop media after playback ended
-        statusUpdateSubscriptionRef.current =
-          mediaObject.onStatusUpdate.subscribe((status) => {
-            if (status === Media.MEDIA_STOPPED && !isPausedByUser) {
-              playAudio();
-            }
-          });
-
-        setIsInitialized(true);
-      } catch (error) {
-        setIsInitialized(false);
-        console.error("Error initializing media: ", error);
-      }
-    } else {
-      // web browser - use Audio API
-      try {
-        audioObjectRef.current = new Audio(trackPath);
-        let audioElement = audioObjectRef.current as HTMLAudioElement;
-        audioElement.loop = true;
-        setIsInitialized(true);
-      } catch (error) {
-        setIsInitialized(false);
-        console.error("Error playing audio:", error);
-      }
-    }
-    // autoplay selected track from playlist
-    if (isInitialized) {
-      setTimeout(() => {
-        if (play) {
-          playAudio();
-          adjustVolume();
-        }
-      }, 500);
-    }
-  };
-
-  useEffect(() => {
-    initializeAudio();
-    return () => {
-      audioCleanup();
-      if (Capacitor.isNativePlatform()) {
-        if (statusUpdateSubscriptionRef.current) {
-          statusUpdateSubscriptionRef.current.unsubscribe();
-        }
-      }
-    };
-  }, [track]);
-
-  useEffect(() => {
-    setLoadedVolume(getVolume());
-    adjustVolume();
-  }, [settings.musicVolume, settings.soundVolume]);
-
   const handlePlayClick = async () => {
-    if (!isInitialized) {
-      await initializeAudio();
-    }
     playAudio();
     setShowToast(true);
   };
 
   const handlePauseClick = () => {
-    if (Capacitor.isNativePlatform()) {
-      setIsPausedByUser(true);
-    }
+    setIsPausedByUser(true);
     pauseAudio();
+  };
+
+  const handleUnmute = async () => {
+    const UNMUTED_VOLUME = 1.0;
+    saveSettings(volumeTypeKey, UNMUTED_VOLUME);
   };
 
   useIonViewWillEnter(() => {
@@ -185,15 +56,10 @@ const PlayControl: React.FC<PlayControlProps> = ({
     setShowToast(false);
   });
 
-  const handleUnmute = async () => {
-    const UNMUTED_VOLUME = 1.0;
-    saveSettings(volumeTypeKey, UNMUTED_VOLUME);
-  };
-
   return (
     <>
       <IonToast
-        isOpen={showToast && isPlaying && loadedVolume === 0}
+        isOpen={showToast && isPlaying && settings[volumeTypeKey] === 0}
         message="The volume is set to zero"
         buttons={[
           {
