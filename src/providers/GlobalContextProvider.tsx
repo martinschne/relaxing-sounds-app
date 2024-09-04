@@ -28,7 +28,6 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
     musicVolume: 1.0,
     soundVolume: 1.0,
     duration: "nonstop",
-    playWhenLocked: true,
     language: "english",
     theme: "system",
     selectedSong: songs[0],

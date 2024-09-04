@@ -34,11 +34,6 @@ const SettingsPage: React.FC = () => {
     saveSettings(SettingsKeys.DURATION, selectedDuration);
   };
 
-  const handlePlayWhenLockedChange = (event: CustomEvent) => {
-    const playWhenLockedState = event.detail.checked;
-    saveSettings(SettingsKeys.PLAY_WHEN_LOCKED, playWhenLockedState);
-  };
-
   const handleLanguageChange = (event: CustomEvent) => {
     const selectedLanguage = event.detail.value;
     saveSettings(SettingsKeys.LANGUAGE, selectedLanguage);
@@ -59,7 +54,7 @@ const SettingsPage: React.FC = () => {
       <IonContent fullscreen>
         <IonList>
           <IonListHeader>
-            <IonLabel>Volume</IonLabel>
+            <IonLabel>Playback</IonLabel>
           </IonListHeader>
           <IonItem lines="none">
             <VolumeSlider
@@ -75,11 +70,6 @@ const SettingsPage: React.FC = () => {
               onVolumeChange={handleSoundVolumeChange}
             />
           </IonItem>
-        </IonList>
-        <IonList>
-          <IonListHeader>
-            <IonLabel>Playback</IonLabel>
-          </IonListHeader>
           <IonItem>
             <IonSelect
               label="Duration"
@@ -96,16 +86,6 @@ const SettingsPage: React.FC = () => {
               <IonSelectOption value="60">60 min</IonSelectOption>
               <IonSelectOption value="nonstop">Nonstop</IonSelectOption>
             </IonSelect>
-          </IonItem>
-          <IonItem>
-            <IonToggle
-              justify="space-between"
-              alignment="center"
-              checked={settings.playWhenLocked}
-              onIonChange={handlePlayWhenLockedChange}
-            >
-              Play When Locked
-            </IonToggle>
           </IonItem>
         </IonList>
         <IonList>

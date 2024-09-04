@@ -83,7 +83,7 @@ export const useAudioPlayer = (
     const trackPath: string = `${path}${track.source}`;
 
     audioCleanup();
-    // android/ios for native platform use cordove media plugin
+    // android/ios for native platform use cordova media plugin
     if (Capacitor.isNativePlatform()) {
       try {
         const nativePath = getNativePublicPath(trackPath);
