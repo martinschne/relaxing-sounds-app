@@ -9,7 +9,6 @@ import {
   IonSelect,
   IonSelectOption,
   IonTitle,
-  IonToggle,
   IonToolbar,
 } from "@ionic/react";
 import VolumeSlider from "../components/VolumeSlider";

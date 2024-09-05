@@ -71,7 +71,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
   });
 
   const showProgress = settings.duration !== "Infinity";
-  let progressColor = isPlaying ? "primary" : "medium";
+  const progressColor = isPlaying ? "primary" : "medium";
 
   return (
     <>
