@@ -27,7 +27,7 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
   const DEFAULT_SETTINGS: Settings = {
     musicVolume: 1.0,
     soundVolume: 1.0,
-    duration: "nonstop",
+    duration: "Infinity",
     language: "english",
     theme: "system",
     selectedSong: songs[0],

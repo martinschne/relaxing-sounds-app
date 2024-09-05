@@ -2,17 +2,25 @@ import {
   IonIcon,
   IonItem,
   IonLabel,
+  IonNote,
+  IonProgressBar,
   IonThumbnail,
   IonToast,
   useIonViewWillEnter,
   useIonViewWillLeave,
 } from "@ionic/react";
-import { pauseOutline, playOutline, volumeMuteOutline } from "ionicons/icons";
+import {
+  pauseOutline,
+  playOutline,
+  timerOutline,
+  volumeMuteOutline,
+} from "ionicons/icons";
 import { useState } from "react";
 import { Track, SettingsKeys } from "../types";
 import FallbackImage from "./FallbackImage";
 import { useGlobalContext } from "../providers/GlobalContextProvider";
 import { useAudioPlayer } from "../hooks/useAudioPlayer";
+import { formatTime } from "../utils/formatTime";
 
 interface PlayControlProps {
   track: Track | null;
@@ -27,8 +35,14 @@ const PlayControl: React.FC<PlayControlProps> = ({
   play,
   volumeTypeKey,
 }) => {
-  const { isPlaying, playAudio, pauseAudio, setIsPausedByUser } =
-    useAudioPlayer(track, path, play, volumeTypeKey);
+  const {
+    isPlaying,
+    playBackProgress,
+    remainingSeconds,
+    playAudio,
+    pauseAudio,
+    setIsPausedByUser,
+  } = useAudioPlayer(track, path, play, volumeTypeKey);
 
   const [showToast, setShowToast] = useState(false);
   const { settings, saveSettings } = useGlobalContext();
@@ -56,6 +70,9 @@ const PlayControl: React.FC<PlayControlProps> = ({
     setShowToast(false);
   });
 
+  const showProgress = settings.duration !== "Infinity";
+  let progressColor = isPlaying ? "primary" : "medium";
+
   return (
     <>
       <IonToast
@@ -75,28 +92,50 @@ const PlayControl: React.FC<PlayControlProps> = ({
         onDidDismiss={() => setShowToast(false)}
       ></IonToast>
       {track && (
-        <IonItem>
-          <IonThumbnail slot="start">
-            <FallbackImage
-              src={track.image}
-              alt={`Album cover for '${track.name}' by ${track.artist}`}
-            />
-          </IonThumbnail>
-          <IonLabel>{track.name}</IonLabel>
-          {isPlaying ? (
-            <IonIcon
-              icon={pauseOutline}
-              aria-label="Pause song"
-              onClick={handlePauseClick}
-            ></IonIcon>
-          ) : (
-            <IonIcon
-              icon={playOutline}
-              aria-label="Play song"
-              onClick={handlePlayClick}
-            ></IonIcon>
+        <>
+          {showProgress && (
+            <IonProgressBar
+              color={progressColor}
+              value={playBackProgress}
+            ></IonProgressBar>
           )}
-        </IonItem>
+          <IonItem lines="none">
+            <IonThumbnail slot="start">
+              <FallbackImage
+                src={track.image}
+                alt={`Album cover for '${track.name}' by ${track.artist}`}
+              />
+            </IonThumbnail>
+            <IonLabel>
+              <h2>{track.name}</h2>
+              {showProgress && (
+                <IonNote
+                  color="medium"
+                  style={{ display: "inline-flex", alignItems: "center" }}
+                >
+                  <IonIcon
+                    icon={timerOutline}
+                    style={{ fontSize: "inherit", verticalAlign: "middle" }}
+                  />
+                  &nbsp;{formatTime(remainingSeconds)}
+                </IonNote>
+              )}
+            </IonLabel>
+            {isPlaying ? (
+              <IonIcon
+                icon={pauseOutline}
+                aria-label="Pause song"
+                onClick={handlePauseClick}
+              ></IonIcon>
+            ) : (
+              <IonIcon
+                icon={playOutline}
+                aria-label="Play song"
+                onClick={handlePlayClick}
+              ></IonIcon>
+            )}
+          </IonItem>
+        </>
       )}
     </>
   );

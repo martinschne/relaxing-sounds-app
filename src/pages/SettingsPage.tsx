@@ -84,7 +84,7 @@ const SettingsPage: React.FC = () => {
               <IonSelectOption value="15">15 min</IonSelectOption>
               <IonSelectOption value="30">30 min</IonSelectOption>
               <IonSelectOption value="60">60 min</IonSelectOption>
-              <IonSelectOption value="nonstop">Nonstop</IonSelectOption>
+              <IonSelectOption value="Infinity">Nonstop</IonSelectOption>
             </IonSelect>
           </IonItem>
         </IonList>
