@@ -15,11 +15,9 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { Track } from "../../types";
+import { Track } from "../types";
 import { useRef } from "react";
-import FallbackImage from "../FallbackImage";
-
-import "./DetailModal.css";
+import FallbackImage from "./FallbackImage";
 
 interface DetailModalProps {
   song: Track;
@@ -57,7 +55,6 @@ const DetailModal: React.FC<DetailModalProps> = ({ song, isOpen, onClose }) => {
       <IonContent fullscreen>
         <IonCard>
           <FallbackImage
-            className="modal-thumbnail"
             src={song.image}
             alt={`Album cover for '${song.name}' by ${song.artist}`}
           />
@@ -66,12 +63,13 @@ const DetailModal: React.FC<DetailModalProps> = ({ song, isOpen, onClose }) => {
             <IonCardSubtitle>{song.artist}</IonCardSubtitle>
           </IonCardHeader>
           <IonCardContent>
-            <IonText>
-              <p>{song.description}</p>
-            </IonText>
-            <div className="tags-container">
+            <IonText>{song.description}</IonText>
+            <div className="ion-margin-top">
               {song.tags.map((tag, index) => (
-                <IonChip key={index}>
+                <IonChip
+                  key={index}
+                  style={{ marginLeft: "0", marginRight: "8px" }}
+                >
                   <IonLabel>#{tag}</IonLabel>
                 </IonChip>
               ))}

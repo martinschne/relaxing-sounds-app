@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Track } from "../types";
 import PopoverItem from "./PopoverItem";
 import { Share } from "@capacitor/share";
-import DetailModal from "./DetailModal/DetailModal";
+import DetailModal from "./DetailModal";
 
 interface ActionsPopoverProps {
   song: Track;

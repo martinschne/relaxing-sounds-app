@@ -5,7 +5,6 @@ import {
   volumeMediumOutline,
   volumeHighOutline,
 } from "ionicons/icons";
-import { useGlobalContext } from "../providers/GlobalContextProvider";
 
 interface VolumeSliderProps {
   label: string;
@@ -29,10 +28,6 @@ const VolumeSlider: React.FC<VolumeSliderProps> = ({
       return volumeHighOutline;
     }
   };
-
-  const { settings } = useGlobalContext();
-
-  console.log("volume slider volume opens" + volume);
 
   return (
     <IonRange

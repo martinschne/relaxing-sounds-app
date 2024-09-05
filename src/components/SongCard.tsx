@@ -1,4 +1,4 @@
-import { IonItem, IonThumbnail, IonLabel, IonImg, IonIcon } from "@ionic/react";
+import { IonItem, IonThumbnail, IonLabel, IonIcon } from "@ionic/react";
 import ActionsPopover from "./ActionsPopover";
 import { Track } from "../types";
 import { ellipsisHorizontalOutline } from "ionicons/icons";
