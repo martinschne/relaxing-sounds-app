@@ -27,16 +27,22 @@ export const useAudioPlayer = (
   const [isPausedByUser, setIsPausedByUser] = useState<Boolean>(false);
   const [playBackProgress, setPlayBackProgress] = useState<number>(NO_PROGRESS);
   const [remainingSeconds, setRemainingSeconds] = useState<number>(
-    Number(settings.duration) * 60
+    getDuration()
   );
+
+  // BEGIN Helper functions
+  function getDuration(): number {
+    return Number(settings.duration);
+  }
 
   const getVolume = (): number => {
     return settings[volumeTypeKey] as number;
   };
 
-  const getDuration = (): number => {
-    return Number(settings.duration);
+  const isDurationSet = () => {
+    return getDuration() !== Infinity;
   };
+  // END
 
   const audioCleanup = () => {
     // do not clean up empty object
@@ -60,7 +66,7 @@ export const useAudioPlayer = (
     audioObjectRef.current = null;
   };
 
-  const adjustVolume = () => {
+  function adjustVolume() {
     if (audioObjectRef.current === null) {
       return;
     }
@@ -73,7 +79,7 @@ export const useAudioPlayer = (
       const htmlAudioElement = audioObjectRef.current as HTMLMediaElement;
       htmlAudioElement.volume = newVolume;
     }
-  };
+  }
 
   const playAudio = () => {
     if (audioObjectRef.current) {
@@ -167,10 +173,6 @@ export const useAudioPlayer = (
     setRemainingSeconds(getDuration() * 60);
   };
 
-  const isDurationSet = () => {
-    return getDuration() !== Infinity;
-  };
-
   useEffect(() => {
     initializeAudio();
     return () => {
@@ -189,32 +191,22 @@ export const useAudioPlayer = (
     adjustVolume();
   }, [settings.musicVolume, settings.soundVolume]);
 
-  useEffect(() => {
-    // when playback starts start counting progress
-    if (isPlaying) {
-      startProgress();
-    } else {
-      // when not playing do not progress
-      stopProgress();
-    }
-  }, [isPlaying, track]);
-
-  // on progress finished, pause audio and reset progress
-  useEffect(() => {
-    if (playBackProgress === FULL_PROGRESS) {
-      pauseAudio();
-      resetProgress();
-    }
-  }, [playBackProgress]);
-
-  // on duration change reset the progress
+  // when new track or duration is chosen, restart the progress
   useEffect(() => {
     resetProgress();
 
     if (isPlaying) {
       startProgress();
     }
-  }, [settings.duration]);
+  }, [track, settings.duration]);
+
+  // when duration time finished, pause audio and restart the progress
+  useEffect(() => {
+    if (playBackProgress === FULL_PROGRESS) {
+      pauseAudio();
+      resetProgress();
+    }
+  }, [playBackProgress]);
 
   return {
     isPlaying,
