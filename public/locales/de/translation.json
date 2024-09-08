@@ -1,0 +1,99 @@
+{
+  "common": {
+    "label": {
+      "cancel": "Abbrechen",
+      "yes": "Ja",
+      "close": "Schließen"
+    }
+  },
+  "label": {
+    "music": "Musik",
+    "sounds": "Geräusche",
+    "settings": "Einstellungen",
+    "about": "Über"
+  },
+  "actionMenu": {
+    "detail": "Detail",
+    "share": "Teilen"
+  },
+  "detailModal": {
+    "header": "Detail"
+  },
+  "creditsModal": {
+    "header": "Danksagungen",
+    "label": {
+      "title": "Titel",
+      "artist": "Künstler",
+      "source": "Quelle",
+      "license": "Lizenz"
+    },
+    "note": "Originaltracks im <2>WAV</2>-Format wurden gemäß den Lizenzbedingungen in das <5>MP3</5>-Format konvertiert."
+  },
+  "musicSearchPlaceholder": "Suche nach Name, Künstler oder Tag",
+  "soundsSearchPlaceholder": "Suche nach Name, Autor oder Tag",
+  "settings": {
+    "playback": {
+      "header": "Wiedergabe",
+      "label": {
+        "music": "Musik",
+        "sound": "Geräusch",
+        "duration": "Dauer"
+      },
+      "durationSelect": {
+        "placeholder": "Dauer auswählen",
+        "option": {
+          "5": "5 Minuten",
+          "15": "15 Minuten",
+          "30": "30 Minuten",
+          "60": "60 Minuten",
+          "nonstop": "Ununterbrochen"
+        }
+      }
+    },
+    "app": {
+      "header": "App",
+      "label": {
+        "language": "Sprache",
+        "theme": "Thema",
+        "accent": "Akzent"
+      },
+      "languageSelect": {
+        "placeholder": "Sprache auswählen",
+        "option": {
+          "en": "Englisch",
+          "de": "Deutsch",
+          "sv": "Schwedisch",
+          "es": "Spanisch",
+          "cz": "Tschechisch",
+          "sk": "Slowakisch",
+          "pl": "Polnisch"
+        }
+      },
+      "themeSelect": {
+        "placeholder": "Thema auswählen",
+        "option": {
+          "system": "System",
+          "light": "Hell",
+          "dark": "Dunkel"
+        }
+      }
+    },
+    "reset": {
+      "buttonLabel": "Einstellungen zurücksetzen",
+      "alert": {
+        "header": "Bist du sicher?"
+      }
+    },
+    "footNote": "Dieser Vorgang ist irreversibel."
+  },
+  "about": {
+    "appDescription": "Kombiniere Musik und Soundeffekte für eine entspannende Wiedergabe. Nutze die App zum Lernen, Meditieren, Schlafen oder um Geräusche zu überdecken.",
+    "tutorialHeader": "Tutorial",
+    "tutorialSteps": "<0><0><0><0>Wähle Musik aus <1>Musik</1></0></0><1><0>Wähle geeignete Geräusche aus <1>Geräusche</1></0></1><2>Stelle Lautstärke, Wiedergabedauer und mehr im <2>Einstellungen</2>-Tab ein</2></0><p>Genieße den Moment der Ruhe! 🍀</p></0>",
+    "buttonLabel": {
+      "viewCredits": "Danksagungen anzeigen",
+      "sourceCode": "Quellcode"
+    },
+    "footNote": "<0>Der Quellcode ist öffentlich auf Github verfügbar.<br/>Danksagungen für verwendete Medien gehören den jeweiligen Autoren.</0>"
+  }
+}

@@ -2,7 +2,8 @@
   "common": {
     "label": {
       "cancel": "Cancel",
-      "yes": "Yes"
+      "yes": "Yes",
+      "close": "Close"
     }
   },
   "label": {
@@ -16,13 +17,17 @@
     "share": "Share"
   },
   "detailModal": {
-    "header": "Detail",
-    "buttonLabel": {
-      "close": "Close"
+    "header": "Detail"
+  },
+  "creditsModal": {
+    "header": "Acknowledgements",
+    "label": {
+      "title": "Title",
+      "artist": "Artist",
+      "source": "Source",
+      "license": "License"
     },
-    "image": {
-      "alt": ""
-    }
+    "note": "Original tracks in <2>WAV</2> format were converted to <5>MP3</5> format in accordance with license terms."
   },
   "musicSearchPlaceholder": "Search by name, artist or tag",
   "soundsSearchPlaceholder": "Search by name, author or tag",
@@ -37,10 +42,10 @@
       "durationSelect": {
         "placeholder": "Select duration",
         "option": {
-          "5": "5 min",
-          "15": "15 min",
-          "30": "30 min",
-          "60": "60 min",
+          "5": "5 minutes",
+          "15": "15 minutes",
+          "30": "30 minutes",
+          "60": "60 minutes",
           "nonstop": "Nonstop"
         }
       }
@@ -58,7 +63,10 @@
           "en": "English",
           "de": "German",
           "sv": "Swedish",
-          "es": "Spanish"
+          "es": "Spanish",
+          "cz": "Czech",
+          "sk": "Slovak",
+          "pl": "Polish"
         }
       },
       "themeSelect": {
@@ -79,14 +87,13 @@
     "footNote": "This operation is irreversible."
   },
   "about": {
-    "appName": "Relaxing Sounds",
     "appDescription": "Combine music & sound effects into relaxing playback. Use the app for studying, meditation, sleeping or masking a sound.",
     "tutorialHeader": "Tutorial",
     "tutorialSteps": "<0><0><0><0>Choose music from <1>Music</1></0></0><1><0>Choose suitable sound from <1>Sounds</1></0></1><2>Adjust volume, duration of playback and more in <2>Settings</2> tab</2></0><p>Enjoy the moment of tranquility! 🍀</p></0>",
     "buttonLabel": {
-      "viewCredits": "View Credits",
+      "viewCredits": "View Acknowledgements",
       "sourceCode": "Source Code"
     },
-    "footNote": "<0>Source code is publicly available on Github.<br/>Credits for media used belong to respective authors.</0>"
+    "footNote": "<0>Source code is publicly available on Github.<br/>Acknowledgements for media used belong to respective authors.</0>"
   }
 }

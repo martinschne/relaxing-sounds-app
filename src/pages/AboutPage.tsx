@@ -22,7 +22,7 @@ const MorePage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen className="ion-padding">
-        <h3>{t("about.appName")}</h3>
+        <h3>Relaxing Sounds</h3>
         <p>{t("about.appDescription")}</p>
 
         <h4>{t("about.tutorialHeader")}</h4>
@@ -56,7 +56,7 @@ const MorePage: React.FC = () => {
             expand="block"
             color="light"
           >
-            View Credits
+            {t("about.buttonLabel.viewCredits")}
           </IonButton>
           <IonButton
             className="ion-margin"
@@ -65,7 +65,7 @@ const MorePage: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Source Code
+            {t("about.buttonLabel.sourceCode")}
           </IonButton>
           <IonTitle size="small">
             <IonText color="medium">

@@ -10,6 +10,7 @@ import { Settings } from "../types";
 import { PreferencesService } from "../services/PreferencesService";
 import { songs } from "../data/songs";
 import { sounds } from "../data/sounds";
+import i18next from "i18next";
 
 export type StateAction<T> = React.Dispatch<React.SetStateAction<T>>;
 
@@ -29,7 +30,7 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
     musicVolume: 1.0,
     soundVolume: 1.0,
     duration: "Infinity",
-    language: "english",
+    language: i18next.resolvedLanguage ?? "en",
     theme: "system",
     selectedSong: songs[0],
     selectedSound: sounds[0],

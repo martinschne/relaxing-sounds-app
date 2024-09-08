@@ -1,0 +1,99 @@
+{
+  "common": {
+    "label": {
+      "cancel": "Zrušit",
+      "yes": "Ano",
+      "close": "Zavřít"
+    }
+  },
+  "label": {
+    "music": "Hudba",
+    "sounds": "Zvuky",
+    "settings": "Nastavení",
+    "about": "O aplikaci"
+  },
+  "actionMenu": {
+    "detail": "Detail",
+    "share": "Sdílet"
+  },
+  "detailModal": {
+    "header": "Detail"
+  },
+  "creditsModal": {
+    "header": "Poděkování",
+    "label": {
+      "title": "Název",
+      "artist": "Interpret",
+      "source": "Zdroj",
+      "license": "Licence"
+    },
+    "note": "Původní stopy ve formátu <2>WAV</2> byly převedeny do formátu <5>MP3</5> v souladu s podmínkami licence."
+  },
+  "musicSearchPlaceholder": "Hledat podle názvu, interpreta nebo tagu",
+  "soundsSearchPlaceholder": "Hledat podle názvu, autora nebo tagu",
+  "settings": {
+    "playback": {
+      "header": "Přehrávání",
+      "label": {
+        "music": "Hudba",
+        "sound": "Zvuk",
+        "duration": "Délka přehrávání"
+      },
+      "durationSelect": {
+        "placeholder": "Vyberte délku přehrávání",
+        "option": {
+          "5": "5 minut",
+          "15": "15 minut",
+          "30": "30 minut",
+          "60": "60 minut",
+          "nonstop": "Nepřetržitě"
+        }
+      }
+    },
+    "app": {
+      "header": "Aplikace",
+      "label": {
+        "language": "Jazyk",
+        "theme": "Téma",
+        "accent": "Akcent"
+      },
+      "languageSelect": {
+        "placeholder": "Vyberte jazyk",
+        "option": {
+          "en": "Angličtina",
+          "de": "Němčina",
+          "sv": "Švédština",
+          "es": "Španělština",
+          "cz": "Čeština",
+          "sk": "Slovenština",
+          "pl": "Polština"
+        }
+      },
+      "themeSelect": {
+        "placeholder": "Vyberte téma",
+        "option": {
+          "system": "Systém",
+          "light": "Světlo",
+          "dark": "Tmavé"
+        }
+      }
+    },
+    "reset": {
+      "buttonLabel": "Obnovit nastavení",
+      "alert": {
+        "header": "Jste si jistí?"
+      }
+    },
+    "footNote": "Tato operace je nevratná."
+  },
+  "about": {
+    "appDescription": "Spojte hudbu a zvukové efekty pro relaxaci. Aplikaci můžete použít ke studiu, meditaci, spánku nebo maskování zvuku.",
+    "tutorialHeader": "Návod",
+    "tutorialSteps": "<0><0><0><0>Vyberte hudbu v záložce <1>Hudba</1></0></0><1><0>Vyberte vhodný zvuk v záložce <1>Zvuky</1></0></1><2>Nastavte hlasitost, délku přehrávání a další nastavení v záložce <2>Nastavení</2></2></0><p>Užijte si chvíli klidu! 🍀</p></0>",
+    "buttonLabel": {
+      "viewCredits": "Zobrazit poděkování",
+      "sourceCode": "Zdrojový kód"
+    },
+    "footNote": "<0>Zdrojový kód je veřejně dostupný na Githubu.<br/>Poděkování za použitá média patří příslušným autorům.</0>"
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "common": {
+    "label": {
+      "cancel": "Anuluj",
+      "yes": "Tak",
+      "close": "Zamknij"
+    }
+  },
+  "label": {
+    "music": "Muzyka",
+    "sounds": "Dźwięki",
+    "settings": "Ustawienia",
+    "about": "O aplikacji"
+  },
+  "actionMenu": {
+    "detail": "Szczegóły",
+    "share": "Udostępnij"
+  },
+  "detailModal": {
+    "header": "Szczegóły"
+  },
+  "creditsModal": {
+    "header": "Podziękowania",
+    "label": {
+      "title": "Tytuł",
+      "artist": "Artysta",
+      "source": "Źródło",
+      "license": "Licencja"
+    },
+    "note": "Oryginalne utwory w formacie <2>WAV</2> zostały przekonwertowane do formatu <5>MP3</5> zgodnie z warunkami licencji."
+  },
+  "musicSearchPlaceholder": "Szukaj według nazwy, artysty lub tagu",
+  "soundsSearchPlaceholder": "Szukaj według nazwy, autora lub tagu",
+  "settings": {
+    "playback": {
+      "header": "Odtwarzanie",
+      "label": {
+        "music": "Muzyka",
+        "sound": "Dźwięk",
+        "duration": "Czas trwania"
+      },
+      "durationSelect": {
+        "placeholder": "Wybierz czas trwania",
+        "option": {
+          "5": "5 minut",
+          "15": "15 minut",
+          "30": "30 minut",
+          "60": "60 minut",
+          "nonstop": "Nieprzerwanie"
+        }
+      }
+    },
+    "app": {
+      "header": "Aplikacja",
+      "label": {
+        "language": "Język",
+        "theme": "Motyw",
+        "accent": "Akcent"
+      },
+      "languageSelect": {
+        "placeholder": "Wybierz język",
+        "option": {
+          "en": "Angielski",
+          "de": "Niemiecki",
+          "sv": "Szwedzki",
+          "es": "Hiszpański",
+          "cz": "Czeski",
+          "sk": "Słowacki",
+          "pl": "Polski"
+        }
+      },
+      "themeSelect": {
+        "placeholder": "Wybierz motyw",
+        "option": {
+          "system": "Systemowy",
+          "light": "Jasny",
+          "dark": "Ciemny"
+        }
+      }
+    },
+    "reset": {
+      "buttonLabel": "Resetuj ustawienia",
+      "alert": {
+        "header": "Jesteś pewny?"
+      }
+    },
+    "footNote": "Ta operacja jest nieodwracalna."
+  },
+  "about": {
+    "appDescription": "Połącz muzykę i efekty dźwiękowe w relaksującym odtwarzaniu. Używaj aplikacji do nauki, medytacji, snu lub maskowania dźwięków.",
+    "tutorialHeader": "Poradnik",
+    "tutorialSteps": "<0><0><0><0>Wybierz muzykę z zakładki <1>Muzyka</1></0></0><1><0>Wybierz odpowiedni dźwięk z zakładki <1>Dźwięki</1></0></1><2>Dostosuj głośność, czas trwania odtwarzania i inne ustawienia w zakładce <2>Ustawienia</2></2></0><p>Ciesz się chwilą spokoju! 🍀</p></0>",
+    "buttonLabel": {
+      "viewCredits": "Zobacz podziękowania",
+      "sourceCode": "Kod źródłowy"
+    },
+    "footNote": "<0>Kod źródłowy jest publicznie dostępny na Githubie.<br/>Podziękowania za wykorzystane media należą do odpowiednich autorów.</0>"
+  }
+}

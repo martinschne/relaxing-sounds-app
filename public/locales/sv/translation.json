@@ -1,0 +1,99 @@
+{
+  "common": {
+    "label": {
+      "cancel": "Avbryt",
+      "yes": "Ja",
+      "close": "Stäng"
+    }
+  },
+  "label": {
+    "music": "Musik",
+    "sounds": "Ljud",
+    "settings": "Inställningar",
+    "about": "Om"
+  },
+  "actionMenu": {
+    "detail": "Detalj",
+    "share": "Dela"
+  },
+  "detailModal": {
+    "header": "Detalj"
+  },
+  "creditsModal": {
+    "header": "Tack",
+    "label": {
+      "title": "Titel",
+      "artist": "Artist",
+      "source": "Källa",
+      "license": "Licens"
+    },
+    "note": "Originalspår i <2>WAV</2>-format har konverterats till <5>MP3</5>-format enligt licensvillkoren."
+  },
+  "musicSearchPlaceholder": "Sök efter namn, artist eller tagg",
+  "soundsSearchPlaceholder": "Sök efter namn, författare eller tagg",
+  "settings": {
+    "playback": {
+      "header": "Uppspelning",
+      "label": {
+        "music": "Musik",
+        "sound": "Ljud",
+        "duration": "Varaktighet"
+      },
+      "durationSelect": {
+        "placeholder": "Välj varaktighet",
+        "option": {
+          "5": "5 minuter",
+          "15": "15 minuter",
+          "30": "30 minuter",
+          "60": "60 minuter",
+          "nonstop": "Oavbrutet"
+        }
+      }
+    },
+    "app": {
+      "header": "App",
+      "label": {
+        "language": "Språk",
+        "theme": "Tema",
+        "accent": "Accent"
+      },
+      "languageSelect": {
+        "placeholder": "Välj språk",
+        "option": {
+          "en": "Engelska",
+          "de": "Tyska",
+          "sv": "Svenska",
+          "es": "Spanska",
+          "cz": "Tjeckiska",
+          "sk": "Slovakiska",
+          "pl": "Polska"
+        }
+      },
+      "themeSelect": {
+        "placeholder": "Välj tema",
+        "option": {
+          "system": "System",
+          "light": "Ljus",
+          "dark": "Mörk"
+        }
+      }
+    },
+    "reset": {
+      "buttonLabel": "Återställ inställningar",
+      "alert": {
+        "header": "Är du säker?"
+      }
+    },
+    "footNote": "Denna åtgärd är irreversibel."
+  },
+  "about": {
+    "appDescription": "Kombinera musik och ljudeffekter för avkopplande uppspelning. Använd appen för att studera, meditera, sova eller för att maskera ett ljud.",
+    "tutorialHeader": "Tutorial",
+    "tutorialSteps": "<0><0><0><0>Välj musik från <1>Musik</1></0></0><1><0>Välj lämpligt ljud från <1>Ljud</1></0></1><2>Justera volym, uppspelningslängd och mer i <2>Inställningar</2>-fliken</2></0><p>Njut av ett ögonblick av stillhet! 🍀</p></0>",
+    "buttonLabel": {
+      "viewCredits": "Visa tack",
+      "sourceCode": "Källkod"
+    },
+    "footNote": "<0>Källkoden är offentligt tillgänglig på Github.<br/>Tack för använd media tillhör respektive författare.</0>"
+  }
+}

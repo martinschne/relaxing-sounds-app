@@ -1,0 +1,99 @@
+{
+  "common": {
+    "label": {
+      "cancel": "Cancelar",
+      "yes": "Sí",
+      "close": "Cerrar"
+    }
+  },
+  "label": {
+    "music": "Música",
+    "sounds": "Sonidos",
+    "settings": "Ajustes",
+    "about": "Acerca de"
+  },
+  "actionMenu": {
+    "detail": "Detalle",
+    "share": "Compartir"
+  },
+  "detailModal": {
+    "header": "Detalle"
+  },
+  "creditsModal": {
+    "header": "Agradecimientos",
+    "label": {
+      "title": "Título",
+      "artist": "Artista",
+      "source": "Fuente",
+      "license": "Licencia"
+    },
+    "note": "Las pistas originales en formato <2>WAV</2> fueron convertidas a formato <5>MP3</5> de acuerdo con los términos de la licencia."
+  },
+  "musicSearchPlaceholder": "Buscar por nombre, artista o etiqueta",
+  "soundsSearchPlaceholder": "Buscar por nombre, autor o etiqueta",
+  "settings": {
+    "playback": {
+      "header": "Reproducción",
+      "label": {
+        "music": "Música",
+        "sound": "Sonido",
+        "duration": "Duración"
+      },
+      "durationSelect": {
+        "placeholder": "Seleccionar duración",
+        "option": {
+          "5": "5 minutos",
+          "15": "15 minutos",
+          "30": "30 minutos",
+          "60": "60 minutos",
+          "nonstop": "Ininterrumpido"
+        }
+      }
+    },
+    "app": {
+      "header": "Aplicación",
+      "label": {
+        "language": "Idioma",
+        "theme": "Tema",
+        "accent": "Acento"
+      },
+      "languageSelect": {
+        "placeholder": "Seleccionar idioma",
+        "option": {
+          "en": "Inglés",
+          "de": "Alemán",
+          "sv": "Sueco",
+          "es": "Español",
+          "cz": "Checo",
+          "sk": "Eslovaco",
+          "pl": "Polaco"
+        }
+      },
+      "themeSelect": {
+        "placeholder": "Seleccionar tema",
+        "option": {
+          "system": "Sistema",
+          "light": "Claro",
+          "dark": "Oscuro"
+        }
+      }
+    },
+    "reset": {
+      "buttonLabel": "Restablecer ajustes",
+      "alert": {
+        "header": "¿Estás seguro?"
+      }
+    },
+    "footNote": "Esta operación es irreversible."
+  },
+  "about": {
+    "appDescription": "Combina música y efectos de sonido para una reproducción relajante. Usa la aplicación para estudiar, meditar, dormir o enmascarar un sonido.",
+    "tutorialHeader": "Tutorial",
+    "tutorialSteps": "<0><0><0><0>Elige música de <1>Música</1></0></0><1><0>Elige un sonido adecuado de <1>Sonidos</1></0></1><2>Ajusta el volumen, la duración de la reproducción y más en la pestaña <2>Ajustes</2></2></0><p>¡Disfruta del momento de tranquilidad! 🍀</p></0>",
+    "buttonLabel": {
+      "viewCredits": "Ver Agradecimientos",
+      "sourceCode": "Código Fuente"
+    },
+    "footNote": "<0>El código fuente está disponible públicamente en Github.<br/>Los agradecimientos por los medios utilizados pertenecen a los respectivos autores.</0>"
+  }
+}

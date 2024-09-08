@@ -55,11 +55,10 @@ const DetailModal: React.FC<DetailModalProps> = ({
             <IonButton
               size="default"
               onClick={(event) => {
-                event.stopPropagation();
                 modal.current?.dismiss();
               }}
             >
-              {t("detailModal.buttonLabel.close")}
+              {t("common.label.close")}
             </IonButton>
           </IonButtons>
         </IonToolbar>

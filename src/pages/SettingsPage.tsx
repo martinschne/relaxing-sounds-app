@@ -9,7 +9,6 @@ import {
   IonLabel,
   IonList,
   IonListHeader,
-  IonNote,
   IonPage,
   IonSelect,
   IonSelectOption,
@@ -22,6 +21,8 @@ import { useGlobalContext } from "../providers/GlobalContextProvider";
 import { SettingsKeys } from "../types";
 import { useTranslation } from "react-i18next";
 import { warning } from "ionicons/icons";
+import i18n from "../i18n";
+import i18next from "i18next";
 
 const SettingsPage: React.FC = () => {
   const { settings, saveSettings, resetSettings } = useGlobalContext();
@@ -44,6 +45,7 @@ const SettingsPage: React.FC = () => {
 
   const handleLanguageChange = (event: CustomEvent) => {
     const selectedLanguage = event.detail.value;
+    i18n.changeLanguage(selectedLanguage);
     saveSettings(SettingsKeys.LANGUAGE, selectedLanguage);
   };
 
@@ -55,6 +57,8 @@ const SettingsPage: React.FC = () => {
   const handleResetSettings = () => {
     resetSettings();
   };
+
+  console.log("$$$$ i18next object" + JSON.stringify(i18next));
 
   return (
     <IonPage>
@@ -86,7 +90,7 @@ const SettingsPage: React.FC = () => {
             <IonSelect
               label={t("settings.playback.label.duration")}
               justify="space-between"
-              aria-label="duration"
+              aria-label={t("settings.playback.label.duration")}
               placeholder={t("settings.playback.durationSelect.placeholder")}
               interface="popover"
               value={settings.duration}
@@ -118,23 +122,32 @@ const SettingsPage: React.FC = () => {
             <IonSelect
               label={t("settings.app.label.language")}
               justify="space-between"
-              aria-label="language"
+              aria-label={t("settings.app.label.language")}
               placeholder={t("settings.app.languageSelect.placeholder")}
               interface="popover"
-              value={settings.language}
+              value={i18next.resolvedLanguage}
               onIonChange={handleLanguageChange}
             >
-              <IonSelectOption value="english">
-                {t("settings.app.languageSelect.option.en")}
+              <IonSelectOption value="cz">
+                {t("settings.app.languageSelect.option.cz")}
               </IonSelectOption>
-              <IonSelectOption value="german">
+              <IonSelectOption value="de">
                 {t("settings.app.languageSelect.option.de")}
               </IonSelectOption>
-              <IonSelectOption value="swedish">
-                {t("settings.app.languageSelect.option.sv")}
+              <IonSelectOption value="en">
+                {t("settings.app.languageSelect.option.en")}
               </IonSelectOption>
-              <IonSelectOption value="spanish">
+              <IonSelectOption value="es">
                 {t("settings.app.languageSelect.option.es")}
+              </IonSelectOption>
+              <IonSelectOption value="pl">
+                {t("settings.app.languageSelect.option.pl")}
+              </IonSelectOption>
+              <IonSelectOption value="sk">
+                {t("settings.app.languageSelect.option.sk")}
+              </IonSelectOption>
+              <IonSelectOption value="sv">
+                {t("settings.app.languageSelect.option.sv")}
               </IonSelectOption>
             </IonSelect>
           </IonItem>
@@ -142,7 +155,7 @@ const SettingsPage: React.FC = () => {
             <IonSelect
               label={t("settings.app.label.theme")}
               justify="space-between"
-              aria-label="theme"
+              aria-label={t("settings.app.label.theme")}
               placeholder={t("settings.app.themeSelect.placeholder")}
               interface="popover"
               value={settings.theme}
@@ -183,7 +196,7 @@ const SettingsPage: React.FC = () => {
               {
                 text: t("common.label.yes"),
                 role: "confirm",
-                handler: resetSettings,
+                handler: handleResetSettings,
               },
             ]}
           ></IonAlert>
