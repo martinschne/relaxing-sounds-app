@@ -1,9 +1,28 @@
 {
+  "common": {
+    "label": {
+      "cancel": "Cancel",
+      "yes": "Yes"
+    }
+  },
   "label": {
     "music": "Music",
     "sounds": "Sounds",
     "settings": "Settings",
     "about": "About"
+  },
+  "actionMenu": {
+    "detail": "Detail",
+    "share": "Share"
+  },
+  "detailModal": {
+    "header": "Detail",
+    "buttonLabel": {
+      "close": "Close"
+    },
+    "image": {
+      "alt": ""
+    }
   },
   "musicSearchPlaceholder": "Search by name, artist or tag",
   "soundsSearchPlaceholder": "Search by name, author or tag",
@@ -51,6 +70,23 @@
         }
       }
     },
-    "resetButtonLabel": "Reset Settings"
+    "reset": {
+      "buttonLabel": "Reset Settings",
+      "alert": {
+        "header": "Are you sure?"
+      }
+    },
+    "footNote": "This operation is irreversible."
+  },
+  "about": {
+    "appName": "Relaxing Sounds",
+    "appDescription": "Combine music & sound effects into relaxing playback. Use the app for studying, meditation, sleeping or masking a sound.",
+    "tutorialHeader": "Tutorial",
+    "tutorialSteps": "<0><0><0><0>Choose music from <1>Music</1></0></0><1><0>Choose suitable sound from <1>Sounds</1></0></1><2>Adjust volume, duration of playback and more in <2>Settings</2> tab</2></0><p>Enjoy the moment of tranquility! 🍀</p></0>",
+    "buttonLabel": {
+      "viewCredits": "View Credits",
+      "sourceCode": "Source Code"
+    },
+    "footNote": "<0>Source code is publicly available on Github.<br/>Credits for media used belong to respective authors.</0>"
   }
 }

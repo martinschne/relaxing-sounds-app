@@ -3,14 +3,14 @@ import { Track } from "../types";
 import { IonSearchbar } from "@ionic/react";
 
 export interface SearchBarProps {
-  songs: Track[];
-  setFilteredSongs: React.Dispatch<React.SetStateAction<Track[]>>;
+  tracks: Track[];
+  setFilteredTracks: React.Dispatch<React.SetStateAction<Track[]>>;
   searchPlaceHolder: string;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
-  songs,
-  setFilteredSongs,
+  tracks,
+  setFilteredTracks,
   searchPlaceHolder,
 }) => {
   const [searchText, setSearchText] = useState<string>("");
@@ -18,15 +18,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const handleSearch = (event: CustomEvent) => {
     const query = event.detail.value!.toLowerCase();
 
-    const filteredSongs = songs.filter(
-      (song) =>
-        song.name.toLowerCase().includes(query) ||
-        song.artist.toLowerCase().includes(query) ||
-        song.tags.some((tag) => tag.toLowerCase().includes(query))
+    const filteredTracks = tracks.filter(
+      (track) =>
+        track.name.toLowerCase().includes(query) ||
+        track.artist.toLowerCase().includes(query) ||
+        track.tags.some((tag) => tag.toLowerCase().includes(query))
     );
 
     setSearchText(query);
-    setFilteredSongs(() => JSON.parse(JSON.stringify(filteredSongs)));
+    setFilteredTracks(() => JSON.parse(JSON.stringify(filteredTracks)));
   };
 
   return (

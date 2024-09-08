@@ -5,12 +5,14 @@ import { Track } from "../types";
 import PopoverItem from "./PopoverItem";
 import { Share } from "@capacitor/share";
 import DetailModal from "./DetailModal";
+import { useTranslation } from "react-i18next";
 
 interface ActionsPopoverProps {
-  song: Track;
+  track: Track;
 }
 
-const ActionsPopover: React.FC<ActionsPopoverProps> = ({ song }) => {
+const ActionsPopover: React.FC<ActionsPopoverProps> = ({ track }) => {
+  const { t } = useTranslation();
   const actionsPopover = useRef<HTMLIonPopoverElement>(null);
 
   const [detailModalOpen, setDetailModalOpen] = useState(false);
@@ -33,9 +35,9 @@ const ActionsPopover: React.FC<ActionsPopoverProps> = ({ song }) => {
     await closePopover();
     try {
       await Share.share({
-        title: `${song.artist} - ${song.name}`,
+        title: `${track.artist} - ${track.name}`,
         text: "Here is an interesting track from Relaxing Sounds app!",
-        url: song.url ?? undefined,
+        url: track.url ?? undefined,
         dialogTitle: "Share with friends",
       });
     } catch (error) {
@@ -66,7 +68,7 @@ const ActionsPopover: React.FC<ActionsPopoverProps> = ({ song }) => {
     <>
       <IonPopover
         ref={actionsPopover}
-        trigger={`actions-trigger-${song.id}`}
+        trigger={`actions-trigger-${track.id}`}
         triggerAction="click"
         onClick={(event) => event.stopPropagation()}
       >
@@ -74,13 +76,13 @@ const ActionsPopover: React.FC<ActionsPopoverProps> = ({ song }) => {
           <IonList>
             <PopoverItem
               id="open-detail-modal"
-              text="Detail"
+              text={t("actionMenu.detail")}
               icon={informationCircleOutline}
               onSelect={handleDetailModalOpen}
             />
             {sharingPossible && (
               <PopoverItem
-                text="Share"
+                text={t("actionMenu.share")}
                 icon={shareOutline}
                 onSelect={handleShare}
               />
@@ -90,7 +92,7 @@ const ActionsPopover: React.FC<ActionsPopoverProps> = ({ song }) => {
       </IonPopover>
 
       <DetailModal
-        song={song}
+        track={track}
         isOpen={detailModalOpen}
         onClose={handleDetailModalClose}
       />

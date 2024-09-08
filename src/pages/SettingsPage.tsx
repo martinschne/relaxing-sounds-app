@@ -169,19 +169,19 @@ const SettingsPage: React.FC = () => {
             expand="block"
             color="danger"
           >
-            {t("settings.resetButtonLabel")}
+            {t("settings.reset.buttonLabel")}
           </IonButton>
           <IonAlert
             trigger="reset-alert"
-            header="Are you sure?"
+            header={t("settings.reset.alert.header")}
             className="custom-alert"
             buttons={[
               {
-                text: "Cancel",
+                text: t("common.label.cancel"),
                 role: "cancel",
               },
               {
-                text: "Yes",
+                text: t("common.label.yes"),
                 role: "confirm",
                 handler: resetSettings,
               },
@@ -190,7 +190,7 @@ const SettingsPage: React.FC = () => {
           <IonTitle size="small">
             <IonText color="medium">
               <IonIcon icon={warning}></IonIcon>
-              This operation is irreversible
+              {t("settings.footNote")}
             </IonText>
           </IonTitle>
         </IonToolbar>

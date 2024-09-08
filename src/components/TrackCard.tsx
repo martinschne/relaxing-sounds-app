@@ -4,37 +4,37 @@ import { Track } from "../types";
 import { ellipsisHorizontalOutline } from "ionicons/icons";
 import FallbackImage from "./FallbackImage";
 
-export interface SongCardProps {
-  song: Track;
+export interface TrackCardProps {
+  track: Track;
   onSelect: (id: string) => void;
 }
 
-const SongCard: React.FC<SongCardProps> = ({ song, onSelect }) => {
-  const handleSongClick = () => {
-    onSelect(song.id);
+const TrackCard: React.FC<TrackCardProps> = ({ track, onSelect }) => {
+  const handleTrackClick = () => {
+    onSelect(track.id);
   };
 
   return (
-    <IonItem onClick={handleSongClick}>
+    <IonItem onClick={handleTrackClick}>
       <IonThumbnail slot="start">
         <FallbackImage
-          src={song.image}
-          alt={`Album cover for '${song.name}' by ${song.artist}`}
+          src={track.image}
+          alt={`Album cover for '${track.name}' by ${track.artist}`}
         />
       </IonThumbnail>
       <IonLabel>
-        <h2>{song.name}</h2>
-        <p>{song.artist}</p>
+        <h2>{track.name}</h2>
+        <p>{track.artist}</p>
       </IonLabel>
       <IonIcon
-        id={`actions-trigger-${song.id}`}
+        id={`actions-trigger-${track.id}`}
         icon={ellipsisHorizontalOutline}
         onClick={(event) => event.stopPropagation()}
         aria-label="Song actions"
       ></IonIcon>
-      <ActionsPopover song={song} />
+      <ActionsPopover track={track} />
     </IonItem>
   );
 };
 
-export default SongCard;
+export default TrackCard;

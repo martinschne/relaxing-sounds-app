@@ -1,6 +1,6 @@
 import { Track, SettingsKeys } from "../types";
 import { IonList } from "@ionic/react";
-import SongCard from "./SongCard";
+import TrackCard from "./TrackCard";
 import { useGlobalContext } from "../providers/GlobalContextProvider";
 
 export interface PlayListProps {
@@ -20,18 +20,20 @@ const PlayList: React.FC<PlayListProps> = ({
     saveSettings(selectedTrackKey, selectedTrack);
   };
 
-  const handleSelectSong = async (id: string) => {
-    const filteredSong = filteredTracks.find((song: Track) => song.id === id);
-    const selected = JSON.parse(JSON.stringify(filteredSong));
+  const handleSelectTrack = async (id: string) => {
+    const filteredTrack = filteredTracks.find(
+      (track: Track) => track.id === id
+    );
+    const selected = JSON.parse(JSON.stringify(filteredTrack));
     saveSelectedTrack(selected);
     setIsPlaying(true);
-    console.log("The song was selected to play: " + selected.name);
+    console.log("The track was selected to play: " + selected.name);
   };
 
   return (
     <IonList>
-      {filteredTracks.map((song: Track) => (
-        <SongCard key={song.id} song={song} onSelect={handleSelectSong} />
+      {filteredTracks.map((track: Track) => (
+        <TrackCard key={track.id} track={track} onSelect={handleSelectTrack} />
       ))}
     </IonList>
   );

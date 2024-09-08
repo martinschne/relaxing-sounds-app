@@ -35,8 +35,8 @@ const SoundsPage: React.FC = () => {
         </IonToolbar>
         <IonToolbar>
           <SearchBar
-            songs={sounds}
-            setFilteredSongs={setFilteredSounds}
+            tracks={sounds}
+            setFilteredTracks={setFilteredSounds}
             searchPlaceHolder={EFFECTS_SEARCH_PLACEHOLDER}
           />
         </IonToolbar>

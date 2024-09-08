@@ -35,8 +35,8 @@ const MusicPage: React.FC = () => {
         </IonToolbar>
         <IonToolbar>
           <SearchBar
-            songs={songs}
-            setFilteredSongs={setFilteredSongs}
+            tracks={songs}
+            setFilteredTracks={setFilteredSongs}
             searchPlaceHolder={MUSIC_SEARCH_PLACEHOLDER}
           />
         </IonToolbar>

@@ -124,13 +124,13 @@ const PlayControl: React.FC<PlayControlProps> = ({
             {isPlaying ? (
               <IonIcon
                 icon={pauseOutline}
-                aria-label="Pause song"
+                aria-label="Pause"
                 onClick={handlePauseClick}
               ></IonIcon>
             ) : (
               <IonIcon
                 icon={playOutline}
-                aria-label="Play song"
+                aria-label="Play"
                 onClick={handlePlayClick}
               ></IonIcon>
             )}
