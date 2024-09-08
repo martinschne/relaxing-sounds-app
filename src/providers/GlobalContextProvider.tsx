@@ -16,6 +16,7 @@ export type StateAction<T> = React.Dispatch<React.SetStateAction<T>>;
 interface GlobalContextType {
   settings: Settings;
   saveSettings: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
+  resetSettings: () => void;
 }
 
 export const GlobalContext = createContext<GlobalContextType | null>(null);
@@ -47,6 +48,10 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
         [key]: value,
       };
     });
+  };
+
+  const resetSettings = () => {
+    setSettings(DEFAULT_SETTINGS);
   };
 
   useEffect(() => {
@@ -86,6 +91,7 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
       value={{
         settings,
         saveSettings,
+        resetSettings,
       }}
     >
       {children}

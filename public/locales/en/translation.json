@@ -1,0 +1,56 @@
+{
+  "label": {
+    "music": "Music",
+    "sounds": "Sounds",
+    "settings": "Settings",
+    "about": "About"
+  },
+  "musicSearchPlaceholder": "Search by name, artist or tag",
+  "soundsSearchPlaceholder": "Search by name, author or tag",
+  "settings": {
+    "playback": {
+      "header": "Playback",
+      "label": {
+        "music": "Music",
+        "sound": "Sound",
+        "duration": "Duration"
+      },
+      "durationSelect": {
+        "placeholder": "Select duration",
+        "option": {
+          "5": "5 min",
+          "15": "15 min",
+          "30": "30 min",
+          "60": "60 min",
+          "nonstop": "Nonstop"
+        }
+      }
+    },
+    "app": {
+      "header": "App",
+      "label": {
+        "language": "Language",
+        "theme": "Theme",
+        "accent": "Accent"
+      },
+      "languageSelect": {
+        "placeholder": "Select language",
+        "option": {
+          "en": "English",
+          "de": "German",
+          "sv": "Swedish",
+          "es": "Spanish"
+        }
+      },
+      "themeSelect": {
+        "placeholder": "Select theme",
+        "option": {
+          "system": "System",
+          "light": "Light",
+          "dark": "Dark"
+        }
+      }
+    },
+    "resetButtonLabel": "Reset Settings"
+  }
+}

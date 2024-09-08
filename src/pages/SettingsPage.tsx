@@ -1,22 +1,31 @@
 import {
+  IonAlert,
+  IonButton,
   IonContent,
+  IonFooter,
   IonHeader,
+  IonIcon,
   IonItem,
   IonLabel,
   IonList,
   IonListHeader,
+  IonNote,
   IonPage,
   IonSelect,
   IonSelectOption,
+  IonText,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
 import VolumeSlider from "../components/VolumeSlider";
 import { useGlobalContext } from "../providers/GlobalContextProvider";
 import { SettingsKeys } from "../types";
+import { useTranslation } from "react-i18next";
+import { warning } from "ionicons/icons";
 
 const SettingsPage: React.FC = () => {
-  const { settings, saveSettings } = useGlobalContext();
+  const { settings, saveSettings, resetSettings } = useGlobalContext();
+  const { t } = useTranslation();
 
   const handleMusicVolumeChange = (event: CustomEvent) => {
     const updatedMusicVolume = event.detail.value;
@@ -40,90 +49,152 @@ const SettingsPage: React.FC = () => {
 
   const handleThemeChange = (event: CustomEvent) => {
     const selectedTheme = event.detail.value;
-    saveSettings(SettingsKeys.LANGUAGE, selectedTheme);
+    saveSettings(SettingsKeys.THEME, selectedTheme);
+  };
+
+  const handleResetSettings = () => {
+    resetSettings();
   };
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Settings</IonTitle>
+          <IonTitle>{t("label.settings")}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonList>
           <IonListHeader>
-            <IonLabel>Playback</IonLabel>
+            <IonLabel>{t("settings.playback.header")}</IonLabel>
           </IonListHeader>
           <IonItem lines="none">
             <VolumeSlider
-              label="Music"
+              label={t("settings.playback.label.music")}
               volume={settings.musicVolume}
               onVolumeChange={handleMusicVolumeChange}
             />
           </IonItem>
           <IonItem lines="none">
             <VolumeSlider
-              label="Sound"
+              label={t("settings.playback.label.sound")}
               volume={settings.soundVolume}
               onVolumeChange={handleSoundVolumeChange}
             />
           </IonItem>
           <IonItem>
             <IonSelect
-              label="Duration"
+              label={t("settings.playback.label.duration")}
               justify="space-between"
               aria-label="duration"
-              placeholder="Select duration"
+              placeholder={t("settings.playback.durationSelect.placeholder")}
               interface="popover"
               value={settings.duration}
               onIonChange={handleDurationChange}
             >
-              <IonSelectOption value="5">5 min</IonSelectOption>
-              <IonSelectOption value="15">15 min</IonSelectOption>
-              <IonSelectOption value="30">30 min</IonSelectOption>
-              <IonSelectOption value="60">60 min</IonSelectOption>
-              <IonSelectOption value="Infinity">Nonstop</IonSelectOption>
+              <IonSelectOption value="5">
+                {t("settings.playback.durationSelect.option.5")}
+              </IonSelectOption>
+              <IonSelectOption value="15">
+                {t("settings.playback.durationSelect.option.15")}
+              </IonSelectOption>
+              <IonSelectOption value="30">
+                {t("settings.playback.durationSelect.option.30")}
+              </IonSelectOption>
+              <IonSelectOption value="60">
+                {t("settings.playback.durationSelect.option.60")}
+              </IonSelectOption>
+              <IonSelectOption value="Infinity">
+                {t("settings.playback.durationSelect.option.nonstop")}
+              </IonSelectOption>
             </IonSelect>
           </IonItem>
         </IonList>
         <IonList>
           <IonListHeader>
-            <IonLabel>App</IonLabel>
+            <IonLabel>{t("settings.app.header")}</IonLabel>
           </IonListHeader>
           <IonItem>
             <IonSelect
-              label="Language"
+              label={t("settings.app.label.language")}
               justify="space-between"
               aria-label="language"
-              placeholder="Select language"
+              placeholder={t("settings.app.languageSelect.placeholder")}
               interface="popover"
               value={settings.language}
               onIonChange={handleLanguageChange}
             >
-              <IonSelectOption value="english">English</IonSelectOption>
-              <IonSelectOption value="german">German</IonSelectOption>
-              <IonSelectOption value="swedish">Swedish</IonSelectOption>
-              <IonSelectOption value="spanish">Spanish</IonSelectOption>
+              <IonSelectOption value="english">
+                {t("settings.app.languageSelect.option.en")}
+              </IonSelectOption>
+              <IonSelectOption value="german">
+                {t("settings.app.languageSelect.option.de")}
+              </IonSelectOption>
+              <IonSelectOption value="swedish">
+                {t("settings.app.languageSelect.option.sv")}
+              </IonSelectOption>
+              <IonSelectOption value="spanish">
+                {t("settings.app.languageSelect.option.es")}
+              </IonSelectOption>
             </IonSelect>
           </IonItem>
           <IonItem>
             <IonSelect
-              label="Theme"
+              label={t("settings.app.label.theme")}
               justify="space-between"
               aria-label="theme"
-              placeholder="Select theme"
+              placeholder={t("settings.app.themeSelect.placeholder")}
               interface="popover"
               value={settings.theme}
               onIonChange={handleThemeChange}
             >
-              <IonSelectOption value="system">System</IonSelectOption>
-              <IonSelectOption value="light">Light</IonSelectOption>
-              <IonSelectOption value="dark">Dark</IonSelectOption>
+              <IonSelectOption value="system">
+                {t("settings.app.themeSelect.option.system")}
+              </IonSelectOption>
+              <IonSelectOption value="light">
+                {t("settings.app.themeSelect.option.light")}
+              </IonSelectOption>
+              <IonSelectOption value="dark">
+                {t("settings.app.themeSelect.option.dark")}
+              </IonSelectOption>
             </IonSelect>
           </IonItem>
         </IonList>
       </IonContent>
+      <IonFooter>
+        <IonToolbar>
+          <IonButton
+            id="reset-alert"
+            className="ion-margin"
+            expand="block"
+            color="danger"
+          >
+            {t("settings.resetButtonLabel")}
+          </IonButton>
+          <IonAlert
+            trigger="reset-alert"
+            header="Are you sure?"
+            className="custom-alert"
+            buttons={[
+              {
+                text: "Cancel",
+                role: "cancel",
+              },
+              {
+                text: "Yes",
+                role: "confirm",
+                handler: resetSettings,
+              },
+            ]}
+          ></IonAlert>
+          <IonTitle size="small">
+            <IonText color="medium">
+              <IonIcon icon={warning}></IonIcon>
+              This operation is irreversible
+            </IonText>
+          </IonTitle>
+        </IonToolbar>
+      </IonFooter>
     </IonPage>
   );
 };

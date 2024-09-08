@@ -13,10 +13,13 @@ import { IonFooter } from "@ionic/react";
 import PlayList from "../components/PlayList";
 import PlayControl from "../components/PlayControl";
 import { useGlobalContext } from "../providers/GlobalContextProvider";
+import { useTranslation } from "react-i18next";
 
 const SoundsPage: React.FC = () => {
+  const { t } = useTranslation();
+
   const ASSETS_SOUNDS_PATH = "/assets/sounds/";
-  const EFFECTS_SEARCH_PLACEHOLDER = "Search by name, description or tag";
+  const EFFECTS_SEARCH_PLACEHOLDER = t("soundsSearchPlaceholder");
 
   const [filteredSounds, setFilteredSounds] = useState(
     JSON.parse(JSON.stringify(sounds))
@@ -28,7 +31,7 @@ const SoundsPage: React.FC = () => {
     <IonPage>
       <IonHeader id="header">
         <IonToolbar>
-          <IonTitle>Sounds</IonTitle>
+          <IonTitle>{t("label.sounds")}</IonTitle>
         </IonToolbar>
         <IonToolbar>
           <SearchBar
@@ -42,7 +45,7 @@ const SoundsPage: React.FC = () => {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Sounds</IonTitle>
+            <IonTitle size="large">{t("label.sounds")}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <PlayList

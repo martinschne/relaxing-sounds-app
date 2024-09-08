@@ -13,7 +13,6 @@ export class PreferencesService {
     return value ? JSON.parse(value) : null;
   };
 
-  // NOTE: implement reset settings feature using this method
   static removePreference = async (key: string): Promise<void> => {
     await Preferences.remove({ key });
   };
