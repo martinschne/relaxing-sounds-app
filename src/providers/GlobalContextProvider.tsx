@@ -6,11 +6,12 @@ import {
   useEffect,
   useRef,
 } from "react";
-import { Settings } from "../types";
+import { Settings, SettingsKeys } from "../types";
 import { PreferencesService } from "../services/PreferencesService";
 import { songs } from "../data/songs";
 import { sounds } from "../data/sounds";
 import i18next from "i18next";
+import { SUPPORTED_LANGUAGES } from "../i18n";
 
 export type StateAction<T> = React.Dispatch<React.SetStateAction<T>>;
 
@@ -22,7 +23,6 @@ interface GlobalContextType {
 
 export const GlobalContext = createContext<GlobalContextType | null>(null);
 
-// define context provider as a wrapping component
 export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
@@ -31,6 +31,7 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
     soundVolume: 1.0,
     duration: "Infinity",
     language: i18next.resolvedLanguage ?? "en",
+    systemLanguage: i18next.resolvedLanguage ?? "en",
     theme: "system",
     selectedSong: songs[0],
     selectedSound: sounds[0],
@@ -38,6 +39,7 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
 
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const isInitialLoad = useRef(true);
+  const isInitialLanguage = useRef(true);
 
   const saveSettings = <K extends keyof Settings>(
     key: K,
@@ -52,7 +54,12 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const resetSettings = () => {
-    setSettings(DEFAULT_SETTINGS);
+    setSettings({
+      ...DEFAULT_SETTINGS,
+      language: settings.systemLanguage,
+      systemLanguage: settings.systemLanguage,
+    });
+    i18next.changeLanguage(settings.systemLanguage);
   };
 
   useEffect(() => {
@@ -61,11 +68,19 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
         "settings"
       )) as Settings;
       if (loadedSettings !== null) {
-        console.log("Settings are loaded now" + JSON.stringify(loadedSettings));
-        setSettings(loadedSettings);
+        setSettings((prevSettings) => {
+          return {
+            ...prevSettings,
+            ...loadSettings,
+          };
+        });
       } else {
-        console.log("$$ GCP: settings are not loaded when not saved yet");
-        setSettings(DEFAULT_SETTINGS);
+        setSettings((prevSettings) => {
+          return {
+            ...prevSettings,
+            ...DEFAULT_SETTINGS,
+          };
+        });
       }
     };
 
@@ -78,14 +93,30 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
       isInitialLoad.current = false;
       return;
     }
-    const saveSettings = async () => {
+    const savePreferences = async () => {
       await PreferencesService.savePreference("settings", settings);
     };
 
-    saveSettings().then(() => {
+    savePreferences().then(() => {
       console.log("$$ GCP settings saved: " + JSON.stringify(settings));
     });
   }, [settings]);
+
+  useEffect(() => {
+    if (isInitialLanguage.current) {
+      isInitialLanguage.current = false;
+      return;
+    }
+
+    const newLanguage = navigator.language?.substring(0, 2);
+    console.log("!!! navigator lang changed to " + newLanguage);
+
+    if (newLanguage && SUPPORTED_LANGUAGES.includes(newLanguage)) {
+      saveSettings(SettingsKeys.LANGUAGE, newLanguage);
+      saveSettings(SettingsKeys.SYSTEM_LANGUAGE, newLanguage);
+      i18next.changeLanguage(newLanguage);
+    }
+  }, [navigator.language]);
 
   return (
     <GlobalContext.Provider

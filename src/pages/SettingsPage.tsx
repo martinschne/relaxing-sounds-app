@@ -21,7 +21,6 @@ import { useGlobalContext } from "../providers/GlobalContextProvider";
 import { SettingsKeys } from "../types";
 import { useTranslation } from "react-i18next";
 import { warning } from "ionicons/icons";
-import i18n from "../i18n";
 import i18next from "i18next";
 
 const SettingsPage: React.FC = () => {
@@ -45,7 +44,7 @@ const SettingsPage: React.FC = () => {
 
   const handleLanguageChange = (event: CustomEvent) => {
     const selectedLanguage = event.detail.value;
-    i18n.changeLanguage(selectedLanguage);
+    i18next.changeLanguage(selectedLanguage);
     saveSettings(SettingsKeys.LANGUAGE, selectedLanguage);
   };
 
@@ -57,8 +56,6 @@ const SettingsPage: React.FC = () => {
   const handleResetSettings = () => {
     resetSettings();
   };
-
-  console.log("$$$$ i18next object" + JSON.stringify(i18next));
 
   return (
     <IonPage>
@@ -125,7 +122,7 @@ const SettingsPage: React.FC = () => {
               aria-label={t("settings.app.label.language")}
               placeholder={t("settings.app.languageSelect.placeholder")}
               interface="popover"
-              value={i18next.resolvedLanguage}
+              value={settings.language}
               onIonChange={handleLanguageChange}
             >
               <IonSelectOption value="cz">

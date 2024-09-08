@@ -5,6 +5,7 @@ export interface Settings {
   soundVolume: number;
   duration: string;
   language: string;
+  systemLanguage: string;
   theme: string;
   selectedSong: Track;
   selectedSound: Track;
