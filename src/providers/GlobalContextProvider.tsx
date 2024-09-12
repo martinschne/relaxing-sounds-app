@@ -39,7 +39,6 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
 
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const isInitialLoad = useRef(true);
-  const isInitialLanguage = useRef(true);
 
   const saveSettings = <K extends keyof Settings>(
     key: K,
@@ -103,20 +102,20 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
   }, [settings]);
 
   useEffect(() => {
-    if (isInitialLanguage.current) {
-      isInitialLanguage.current = false;
-      return;
-    }
+    const handleLanguageChange = () => {
+      console.log("$$$ Language change event occurred!!");
+      const newLanguage = navigator.language?.substring(0, 2);
+      console.log("!!! navigator lang changed to " + newLanguage);
 
-    const newLanguage = navigator.language?.substring(0, 2);
-    console.log("!!! navigator lang changed to " + newLanguage);
+      if (newLanguage && SUPPORTED_LANGUAGES.includes(newLanguage)) {
+        saveSettings(SettingsKeys.LANGUAGE, newLanguage);
+        saveSettings(SettingsKeys.SYSTEM_LANGUAGE, newLanguage);
+        i18next.changeLanguage(newLanguage);
+      }
+    };
 
-    if (newLanguage && SUPPORTED_LANGUAGES.includes(newLanguage)) {
-      saveSettings(SettingsKeys.LANGUAGE, newLanguage);
-      saveSettings(SettingsKeys.SYSTEM_LANGUAGE, newLanguage);
-      i18next.changeLanguage(newLanguage);
-    }
-  }, [navigator.language]);
+    handleLanguageChange();
+  }, []);
 
   return (
     <GlobalContext.Provider

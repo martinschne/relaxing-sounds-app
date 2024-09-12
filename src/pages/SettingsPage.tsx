@@ -125,8 +125,8 @@ const SettingsPage: React.FC = () => {
               value={settings.language}
               onIonChange={handleLanguageChange}
             >
-              <IonSelectOption value="cz">
-                {t("settings.app.languageSelect.option.cz")}
+              <IonSelectOption value="cs">
+                {t("settings.app.languageSelect.option.cs")}
               </IonSelectOption>
               <IonSelectOption value="de">
                 {t("settings.app.languageSelect.option.de")}
@@ -199,8 +199,10 @@ const SettingsPage: React.FC = () => {
           ></IonAlert>
           <IonTitle size="small">
             <IonText color="medium">
-              <IonIcon icon={warning}></IonIcon>
-              {t("settings.footNote")}
+              <p>
+                <IonIcon icon={warning}></IonIcon>
+                {t("settings.footNote")}
+              </p>
             </IonText>
           </IonTitle>
         </IonToolbar>
