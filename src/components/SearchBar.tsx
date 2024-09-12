@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Track } from "../types";
 import { IonSearchbar } from "@ionic/react";
 
@@ -13,27 +13,31 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   setFilteredTracks,
   searchPlaceHolder,
 }) => {
-  const [searchText, setSearchText] = useState<string>("");
+  const [searchText, setSearchText] = useState("");
 
-  const handleSearch = (event: CustomEvent) => {
-    const query = event.detail.value!.toLowerCase();
+  useEffect(() => {
+    const getSearch = setTimeout(() => {
+      const query = searchText.toLowerCase();
 
-    const filteredTracks = tracks.filter(
-      (track) =>
-        track.name.toLowerCase().includes(query) ||
-        track.artist.toLowerCase().includes(query) ||
-        track.tags.some((tag) => tag.toLowerCase().includes(query))
-    );
+      const filteredTracks = tracks.filter(
+        (track) =>
+          track.name.toLowerCase().includes(query) ||
+          track.artist.toLowerCase().includes(query) ||
+          track.tags.some((tag) => tag.toLowerCase().includes(query))
+      );
 
-    setSearchText(query);
-    setFilteredTracks(() => JSON.parse(JSON.stringify(filteredTracks)));
-  };
+      setSearchText(query);
+      setFilteredTracks(() => JSON.parse(JSON.stringify(filteredTracks)));
+    }, 250);
+
+    return () => clearTimeout(getSearch);
+  }, [searchText]);
 
   return (
     <IonSearchbar
       value={searchText}
       placeholder={searchPlaceHolder}
-      onIonInput={handleSearch}
+      onIonInput={(event) => setSearchText(event.target.value ?? "")}
     ></IonSearchbar>
   );
 };
