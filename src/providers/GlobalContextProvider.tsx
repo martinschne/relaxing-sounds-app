@@ -4,14 +4,14 @@ import {
   useContext,
   ReactNode,
   useEffect,
-  useRef,
 } from "react";
 import { Settings, SettingsKeys } from "../types";
 import { PreferencesService } from "../services/PreferencesService";
 import { songs } from "../data/songs";
 import { sounds } from "../data/sounds";
 import i18next from "i18next";
-import { SUPPORTED_LANGUAGES } from "../i18n";
+import { FALLBACK_LANGUAGE, SUPPORTED_LANGUAGES } from "../i18n";
+import { Device } from "@capacitor/device";
 
 export type StateAction<T> = React.Dispatch<React.SetStateAction<T>>;
 
@@ -30,7 +30,7 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
     musicVolume: 1.0,
     soundVolume: 1.0,
     duration: "Infinity",
-    language: i18next.resolvedLanguage ?? "en",
+    language: "system",
     systemLanguage: i18next.resolvedLanguage ?? "en",
     theme: "system",
     selectedSong: songs[0],
@@ -38,7 +38,7 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
-  const isInitialLoad = useRef(true);
+  const [loadPreferencesComplete, setLoadPreferencesComplete] = useState(false);
 
   const saveSettings = <K extends keyof Settings>(
     key: K,
@@ -55,10 +55,14 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
   const resetSettings = () => {
     setSettings({
       ...DEFAULT_SETTINGS,
-      language: settings.systemLanguage,
       systemLanguage: settings.systemLanguage,
     });
     i18next.changeLanguage(settings.systemLanguage);
+  };
+
+  const savePreferences = async () => {
+    console.log("Saved preferences: " + JSON.stringify(settings));
+    await PreferencesService.savePreference("settings", settings);
   };
 
   useEffect(() => {
@@ -70,7 +74,7 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
         setSettings((prevSettings) => {
           return {
             ...prevSettings,
-            ...loadSettings,
+            ...loadedSettings,
           };
         });
       } else {
@@ -83,39 +87,53 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
       }
     };
 
-    loadSettings();
-  }, []);
+    const checkSystemLanguageChange = async () => {
+      const newLanguageCode = await Device.getLanguageCode();
+      console.log(
+        "checkSystemLanguageChange: newLang is: " + newLanguageCode.value
+      );
 
-  useEffect(() => {
-    if (isInitialLoad.current) {
-      // skip saving on first load
-      isInitialLoad.current = false;
-      return;
-    }
-    const savePreferences = async () => {
-      await PreferencesService.savePreference("settings", settings);
-    };
-
-    savePreferences().then(() => {
-      console.log("$$ GCP settings saved: " + JSON.stringify(settings));
-    });
-  }, [settings]);
-
-  useEffect(() => {
-    const handleLanguageChange = () => {
-      console.log("$$$ Language change event occurred!!");
-      const newLanguage = navigator.language?.substring(0, 2);
-      console.log("!!! navigator lang changed to " + newLanguage);
-
-      if (newLanguage && SUPPORTED_LANGUAGES.includes(newLanguage)) {
-        saveSettings(SettingsKeys.LANGUAGE, newLanguage);
-        saveSettings(SettingsKeys.SYSTEM_LANGUAGE, newLanguage);
-        i18next.changeLanguage(newLanguage);
+      if (SUPPORTED_LANGUAGES.includes(newLanguageCode.value)) {
+        saveSettings(SettingsKeys.SYSTEM_LANGUAGE, newLanguageCode.value);
+      } else {
+        // apply fallback if the system lang is not implemented
+        if (settings.language === "system") {
+          saveSettings(SettingsKeys.SYSTEM_LANGUAGE, FALLBACK_LANGUAGE);
+        }
       }
     };
 
-    handleLanguageChange();
+    loadSettings()
+      .then(() => setLoadPreferencesComplete(true))
+      .then(checkSystemLanguageChange)
+      .then(savePreferences)
+      .catch((error) => {
+        console.error("Error during settings initialization:", error);
+      });
   }, []);
+
+  // continue saving changed preferences after the initial preferences were loaded
+  useEffect(() => {
+    if (loadPreferencesComplete) {
+      savePreferences().then(() => {
+        console.log("$$ GCP settings saved: " + JSON.stringify(settings));
+      });
+    }
+  }, [settings]);
+
+  useEffect(() => {
+    if (settings.language === "system") {
+      i18next.changeLanguage(settings.systemLanguage);
+    } else {
+      i18next.changeLanguage(settings.language);
+    }
+
+    // if system language was switched to manually chosen language
+    // activate system language for app
+    if (settings.systemLanguage === settings.language) {
+      saveSettings(SettingsKeys.LANGUAGE, "system");
+    }
+  }, [settings.language, settings.systemLanguage]);
 
   return (
     <GlobalContext.Provider

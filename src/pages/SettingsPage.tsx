@@ -14,6 +14,7 @@ import {
   IonSelectOption,
   IonText,
   IonTitle,
+  IonToast,
   IonToolbar,
 } from "@ionic/react";
 import VolumeSlider from "../components/VolumeSlider";
@@ -22,6 +23,9 @@ import { SettingsKeys } from "../types";
 import { useTranslation } from "react-i18next";
 import { warning } from "ionicons/icons";
 import i18next from "i18next";
+import { useEffect } from "react";
+import { SUPPORTED_LANGUAGES } from "../i18n";
+import { Device } from "@capacitor/device";
 
 const SettingsPage: React.FC = () => {
   const { settings, saveSettings, resetSettings } = useGlobalContext();
@@ -43,9 +47,14 @@ const SettingsPage: React.FC = () => {
   };
 
   const handleLanguageChange = (event: CustomEvent) => {
-    const selectedLanguage = event.detail.value;
-    i18next.changeLanguage(selectedLanguage);
+    let selectedLanguage = event.detail.value;
     saveSettings(SettingsKeys.LANGUAGE, selectedLanguage);
+
+    if (selectedLanguage === "system") {
+      i18next.changeLanguage(settings.systemLanguage);
+    } else {
+      i18next.changeLanguage(selectedLanguage);
+    }
   };
 
   const handleThemeChange = (event: CustomEvent) => {
@@ -56,6 +65,8 @@ const SettingsPage: React.FC = () => {
   const handleResetSettings = () => {
     resetSettings();
   };
+
+  useEffect(() => {}, [settings.systemLanguage]);
 
   return (
     <IonPage>
@@ -125,27 +136,21 @@ const SettingsPage: React.FC = () => {
               value={settings.language}
               onIonChange={handleLanguageChange}
             >
-              <IonSelectOption value="cs">
-                {t("settings.app.languageSelect.option.cs")}
+              <IonSelectOption value={"system"}>
+                {t("settings.app.languageSelect.option.system")} -{" "}
+                {t(
+                  "settings.app.languageSelect.option." +
+                    settings.systemLanguage
+                )}
               </IonSelectOption>
-              <IonSelectOption value="de">
-                {t("settings.app.languageSelect.option.de")}
-              </IonSelectOption>
-              <IonSelectOption value="en">
-                {t("settings.app.languageSelect.option.en")}
-              </IonSelectOption>
-              <IonSelectOption value="es">
-                {t("settings.app.languageSelect.option.es")}
-              </IonSelectOption>
-              <IonSelectOption value="pl">
-                {t("settings.app.languageSelect.option.pl")}
-              </IonSelectOption>
-              <IonSelectOption value="sk">
-                {t("settings.app.languageSelect.option.sk")}
-              </IonSelectOption>
-              <IonSelectOption value="sv">
-                {t("settings.app.languageSelect.option.sv")}
-              </IonSelectOption>
+              {SUPPORTED_LANGUAGES.map(
+                (language, index) =>
+                  language !== settings.systemLanguage && (
+                    <IonSelectOption key={index} value={language}>
+                      {t(`settings.app.languageSelect.option.${language}`)}
+                    </IonSelectOption>
+                  )
+              )}
             </IonSelect>
           </IonItem>
           <IonItem>
@@ -172,6 +177,21 @@ const SettingsPage: React.FC = () => {
         </IonList>
       </IonContent>
       <IonFooter>
+        {/* NOTE: // implement the translation for message and buttons */}
+        <IonToast
+          isOpen={settings.systemLanguage != i18next.resolvedLanguage}
+          message="We don't have your system language yet, switching back to English"
+          buttons={[
+            {
+              text: "OK",
+              role: "cancel",
+            },
+          ]}
+          position="top"
+          swipeGesture="vertical"
+          duration={5000}
+          animated={true}
+        ></IonToast>
         <IonToolbar>
           <IonButton
             id="reset-alert"

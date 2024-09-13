@@ -60,6 +60,7 @@
       "languageSelect": {
         "placeholder": "Vyberte jazyk",
         "option": {
+          "system": "Systém",
           "en": "Angličtina",
           "de": "Němčina",
           "sv": "Švédština",

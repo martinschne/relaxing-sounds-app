@@ -75,6 +75,7 @@ const PlayControl: React.FC<PlayControlProps> = ({
 
   return (
     <>
+      {/* NOTE: // implement the translation for message and buttons */}
       <IonToast
         isOpen={showToast && isPlaying && settings[volumeTypeKey] === 0}
         message="The volume is set to zero"
