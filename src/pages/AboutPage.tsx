@@ -4,12 +4,12 @@ import {
   IonFooter,
   IonHeader,
   IonPage,
-  IonText,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
 import CreditsModal from "../components/CreditsModal";
 import { Trans, useTranslation } from "react-i18next";
+import FooterNote from "../components/FooterNote";
 
 const MorePage: React.FC = () => {
   const { t } = useTranslation();
@@ -22,7 +22,7 @@ const MorePage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen className="ion-padding">
-        <h3>Relaxing Sounds</h3>
+        <h3>RelaxingSounds</h3>
         <p>{t("about.appDescription")}</p>
 
         <h4>{t("about.tutorialHeader")}</h4>
@@ -67,20 +67,15 @@ const MorePage: React.FC = () => {
           >
             {t("about.buttonLabel.sourceCode")}
           </IonButton>
-          <IonTitle
-            size="small"
-            className="ion-padding-horizontal ion-margin-bottom ion-text-center"
-          >
-            <IonText color="medium">
-              <Trans i18nKey="about.footNote">
-                <div>
-                  Source code is publicly available on Github.
-                  <br />
-                  Credits for media used belong to respective authors.
-                </div>
-              </Trans>
-            </IonText>
-          </IonTitle>
+          <FooterNote>
+            <Trans i18nKey="about.footNote">
+              <div>
+                Source code is publicly available on Github.
+                <br />
+                Credits for media used belong to respective authors.
+              </div>
+            </Trans>
+          </FooterNote>
         </IonToolbar>
       </IonFooter>
       <CreditsModal />

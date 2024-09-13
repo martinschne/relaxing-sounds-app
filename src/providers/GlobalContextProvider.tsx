@@ -4,6 +4,7 @@ import {
   useContext,
   ReactNode,
   useEffect,
+  useCallback,
 } from "react";
 import { Settings, SettingsKeys } from "../types";
 import { PreferencesService } from "../services/PreferencesService";
@@ -64,6 +65,25 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
     await PreferencesService.savePreference("settings", settings);
   };
 
+  const toggleDarkPalette = (shouldAdd: boolean) => {
+    document.documentElement.classList.toggle("ion-palette-dark", shouldAdd);
+  };
+
+  const changeSystemTheme = useCallback(
+    (event: { matches: boolean }) => {
+      const theme = settings.theme;
+      if (theme === "system") {
+        toggleDarkPalette(event.matches);
+      } else if (theme === "light") {
+        toggleDarkPalette(false);
+      } else if (theme === "dark") {
+        toggleDarkPalette(true);
+      }
+      saveSettings(SettingsKeys.THEME, theme);
+    },
+    [settings.theme]
+  );
+
   useEffect(() => {
     const loadSettings = async () => {
       const loadedSettings = (await PreferencesService.loadPreference(
@@ -92,14 +112,6 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
         "checkSystemLanguageChange: newLang is: " + newLanguageCode.value
       );
 
-      // if (SUPPORTED_LANGUAGES.includes(newLanguageCode.value)) {
-      //   saveSettings(SettingsKeys.SYSTEM_LANGUAGE, newLanguageCode.value);
-      // } else {
-      //   // apply fallback if the system lang is not implemented
-      //   if (settings.language === "system") {
-      //     saveSettings(SettingsKeys.SYSTEM_LANGUAGE, FALLBACK_LANGUAGE);
-      //   }
-      // }
       saveSettings(SettingsKeys.SYSTEM_LANGUAGE, newLanguageCode.value);
     };
 
@@ -134,6 +146,27 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
       saveSettings(SettingsKeys.LANGUAGE, "system");
     }
   }, [settings.language, settings.systemLanguage]);
+
+  useEffect(() => {
+    // changeSystemTheme();
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+    const theme = settings.theme;
+
+    if (theme === "system") {
+      toggleDarkPalette(prefersDark.matches);
+    } else if (theme === "light") {
+      toggleDarkPalette(false);
+    } else if (theme === "dark") {
+      toggleDarkPalette(true);
+    }
+
+    // Listen for changes to the prefers-color-scheme media query
+    prefersDark.addEventListener("change", changeSystemTheme);
+
+    return () => {
+      prefersDark.removeEventListener("change", changeSystemTheme);
+    };
+  }, [settings.theme, changeSystemTheme]);
 
   return (
     <GlobalContext.Provider

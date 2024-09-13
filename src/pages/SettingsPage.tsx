@@ -13,7 +13,6 @@ import {
   IonPage,
   IonSelect,
   IonSelectOption,
-  IonText,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -24,13 +23,9 @@ import { useTranslation } from "react-i18next";
 import { warning } from "ionicons/icons";
 import i18next from "i18next";
 import { FALLBACK_LANGUAGE, SUPPORTED_LANGUAGES } from "../i18n";
-import { useState } from "react";
+import FooterNote from "../components/FooterNote";
 
 const SettingsPage: React.FC = () => {
-  const [isDarkModeActive, setIsDarkModeActive] = useState(
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-  );
-
   const { settings, saveSettings, resetSettings } = useGlobalContext();
   const { t } = useTranslation();
 
@@ -175,8 +170,6 @@ const SettingsPage: React.FC = () => {
             >
               <IonSelectOption value="system">
                 {t("settings.app.themeSelect.option.system")}
-                {" - "}
-                {isDarkModeActive ? "Dark" : "Light"}
               </IonSelectOption>
               <IonSelectOption value="light">
                 {t("settings.app.themeSelect.option.light")}
@@ -188,7 +181,7 @@ const SettingsPage: React.FC = () => {
           </IonItem>
         </IonList>
         {!isSystemLanguageSupported && isSystemLanguageActive && (
-          <div className="ion-padding">
+          <div className="ion-padding-horizontal">
             <IonNote color="medium">
               {<sup>*</sup>} We don't support your system language yet.
             </IonNote>
@@ -221,15 +214,10 @@ const SettingsPage: React.FC = () => {
               },
             ]}
           ></IonAlert>
-          <IonTitle
-            size="small"
-            className="ion-padding-horizontal ion-margin-bottom ion-text-center"
-          >
-            <IonText color="medium">
-              <IonIcon icon={warning}></IonIcon>
-              {t("settings.footNote")}
-            </IonText>
-          </IonTitle>
+          <FooterNote>
+            <IonIcon icon={warning}></IonIcon>
+            {t("settings.footNote")}
+          </FooterNote>
         </IonToolbar>
       </IonFooter>
     </IonPage>
