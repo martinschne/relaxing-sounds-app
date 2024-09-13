@@ -67,14 +67,17 @@ const MorePage: React.FC = () => {
           >
             {t("about.buttonLabel.sourceCode")}
           </IonButton>
-          <IonTitle size="small">
+          <IonTitle
+            size="small"
+            className="ion-padding-horizontal ion-margin-bottom ion-text-center"
+          >
             <IonText color="medium">
               <Trans i18nKey="about.footNote">
-                <p>
+                <div>
                   Source code is publicly available on Github.
                   <br />
                   Credits for media used belong to respective authors.
-                </p>
+                </div>
               </Trans>
             </IonText>
           </IonTitle>

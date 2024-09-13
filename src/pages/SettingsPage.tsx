@@ -9,6 +9,7 @@ import {
   IonLabel,
   IonList,
   IonListHeader,
+  IonNote,
   IonPage,
   IonSelect,
   IonSelectOption,
@@ -22,9 +23,14 @@ import { SettingsKeys } from "../types";
 import { useTranslation } from "react-i18next";
 import { warning } from "ionicons/icons";
 import i18next from "i18next";
-import { SUPPORTED_LANGUAGES } from "../i18n";
+import { FALLBACK_LANGUAGE, SUPPORTED_LANGUAGES } from "../i18n";
+import { useState } from "react";
 
 const SettingsPage: React.FC = () => {
+  const [isDarkModeActive, setIsDarkModeActive] = useState(
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  );
+
   const { settings, saveSettings, resetSettings } = useGlobalContext();
   const { t } = useTranslation();
 
@@ -63,6 +69,14 @@ const SettingsPage: React.FC = () => {
     resetSettings();
   };
 
+  const isSystemLanguageActive = settings.language === "system";
+  const isSystemLanguageSupported = SUPPORTED_LANGUAGES.includes(
+    settings.systemLanguage
+  );
+  const selectedSystemLanguageCode = isSystemLanguageSupported
+    ? settings.systemLanguage
+    : FALLBACK_LANGUAGE;
+
   return (
     <IonPage>
       <IonHeader>
@@ -71,25 +85,25 @@ const SettingsPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonList>
-          <IonListHeader>
-            <IonLabel>{t("settings.playback.header")}</IonLabel>
-          </IonListHeader>
-          <IonItem lines="none">
+        <IonListHeader>
+          <IonLabel>{t("settings.playback.header")}</IonLabel>
+        </IonListHeader>
+        <IonList inset className="custom-list-background">
+          <IonItem lines="none" color="light">
             <VolumeSlider
               label={t("settings.playback.label.music")}
               volume={settings.musicVolume}
               onVolumeChange={handleMusicVolumeChange}
             />
           </IonItem>
-          <IonItem lines="none">
+          <IonItem lines="none" color="light">
             <VolumeSlider
               label={t("settings.playback.label.sound")}
               volume={settings.soundVolume}
               onVolumeChange={handleSoundVolumeChange}
             />
           </IonItem>
-          <IonItem>
+          <IonItem color="light">
             <IonSelect
               label={t("settings.playback.label.duration")}
               justify="space-between"
@@ -117,11 +131,11 @@ const SettingsPage: React.FC = () => {
             </IonSelect>
           </IonItem>
         </IonList>
-        <IonList>
-          <IonListHeader>
-            <IonLabel>{t("settings.app.header")}</IonLabel>
-          </IonListHeader>
-          <IonItem>
+        <IonListHeader>
+          <IonLabel>{t("settings.app.header")}</IonLabel>
+        </IonListHeader>
+        <IonList inset>
+          <IonItem color="light">
             <IonSelect
               label={t("settings.app.label.language")}
               justify="space-between"
@@ -135,8 +149,9 @@ const SettingsPage: React.FC = () => {
                 {t("settings.app.languageSelect.option.system")} -{" "}
                 {t(
                   "settings.app.languageSelect.option." +
-                    settings.systemLanguage
+                    selectedSystemLanguageCode
                 )}
+                {!isSystemLanguageSupported && <sup> *</sup>}
               </IonSelectOption>
               {SUPPORTED_LANGUAGES.map(
                 (language, index) =>
@@ -148,7 +163,7 @@ const SettingsPage: React.FC = () => {
               )}
             </IonSelect>
           </IonItem>
-          <IonItem>
+          <IonItem color="light">
             <IonSelect
               label={t("settings.app.label.theme")}
               justify="space-between"
@@ -160,6 +175,8 @@ const SettingsPage: React.FC = () => {
             >
               <IonSelectOption value="system">
                 {t("settings.app.themeSelect.option.system")}
+                {" - "}
+                {isDarkModeActive ? "Dark" : "Light"}
               </IonSelectOption>
               <IonSelectOption value="light">
                 {t("settings.app.themeSelect.option.light")}
@@ -170,6 +187,13 @@ const SettingsPage: React.FC = () => {
             </IonSelect>
           </IonItem>
         </IonList>
+        {!isSystemLanguageSupported && isSystemLanguageActive && (
+          <div className="ion-padding">
+            <IonNote color="medium">
+              {<sup>*</sup>} We don't support your system language yet.
+            </IonNote>
+          </div>
+        )}
       </IonContent>
       <IonFooter>
         <IonToolbar>
@@ -197,12 +221,13 @@ const SettingsPage: React.FC = () => {
               },
             ]}
           ></IonAlert>
-          <IonTitle size="small">
+          <IonTitle
+            size="small"
+            className="ion-padding-horizontal ion-margin-bottom ion-text-center"
+          >
             <IonText color="medium">
-              <p>
-                <IonIcon icon={warning}></IonIcon>
-                {t("settings.footNote")}
-              </p>
+              <IonIcon icon={warning}></IonIcon>
+              {t("settings.footNote")}
             </IonText>
           </IonTitle>
         </IonToolbar>

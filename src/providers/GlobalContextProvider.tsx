@@ -10,7 +10,6 @@ import { PreferencesService } from "../services/PreferencesService";
 import { songs } from "../data/songs";
 import { sounds } from "../data/sounds";
 import i18next from "i18next";
-import { FALLBACK_LANGUAGE, SUPPORTED_LANGUAGES } from "../i18n";
 import { Device } from "@capacitor/device";
 
 export type StateAction<T> = React.Dispatch<React.SetStateAction<T>>;
@@ -93,14 +92,15 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
         "checkSystemLanguageChange: newLang is: " + newLanguageCode.value
       );
 
-      if (SUPPORTED_LANGUAGES.includes(newLanguageCode.value)) {
-        saveSettings(SettingsKeys.SYSTEM_LANGUAGE, newLanguageCode.value);
-      } else {
-        // apply fallback if the system lang is not implemented
-        if (settings.language === "system") {
-          saveSettings(SettingsKeys.SYSTEM_LANGUAGE, FALLBACK_LANGUAGE);
-        }
-      }
+      // if (SUPPORTED_LANGUAGES.includes(newLanguageCode.value)) {
+      //   saveSettings(SettingsKeys.SYSTEM_LANGUAGE, newLanguageCode.value);
+      // } else {
+      //   // apply fallback if the system lang is not implemented
+      //   if (settings.language === "system") {
+      //     saveSettings(SettingsKeys.SYSTEM_LANGUAGE, FALLBACK_LANGUAGE);
+      //   }
+      // }
+      saveSettings(SettingsKeys.SYSTEM_LANGUAGE, newLanguageCode.value);
     };
 
     loadSettings()
