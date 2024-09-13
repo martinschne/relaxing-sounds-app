@@ -14,7 +14,6 @@ import {
   IonSelectOption,
   IonText,
   IonTitle,
-  IonToast,
   IonToolbar,
 } from "@ionic/react";
 import VolumeSlider from "../components/VolumeSlider";
@@ -23,9 +22,7 @@ import { SettingsKeys } from "../types";
 import { useTranslation } from "react-i18next";
 import { warning } from "ionicons/icons";
 import i18next from "i18next";
-import { useEffect } from "react";
 import { SUPPORTED_LANGUAGES } from "../i18n";
-import { Device } from "@capacitor/device";
 
 const SettingsPage: React.FC = () => {
   const { settings, saveSettings, resetSettings } = useGlobalContext();
@@ -66,8 +63,6 @@ const SettingsPage: React.FC = () => {
     resetSettings();
   };
 
-  useEffect(() => {}, [settings.systemLanguage]);
-
   return (
     <IonPage>
       <IonHeader>
@@ -100,7 +95,7 @@ const SettingsPage: React.FC = () => {
               justify="space-between"
               aria-label={t("settings.playback.label.duration")}
               placeholder={t("settings.playback.durationSelect.placeholder")}
-              interface="popover"
+              interface="action-sheet"
               value={settings.duration}
               onIonChange={handleDurationChange}
             >
@@ -132,7 +127,7 @@ const SettingsPage: React.FC = () => {
               justify="space-between"
               aria-label={t("settings.app.label.language")}
               placeholder={t("settings.app.languageSelect.placeholder")}
-              interface="popover"
+              interface="alert"
               value={settings.language}
               onIonChange={handleLanguageChange}
             >
@@ -177,21 +172,6 @@ const SettingsPage: React.FC = () => {
         </IonList>
       </IonContent>
       <IonFooter>
-        {/* NOTE: // implement the translation for message and buttons */}
-        <IonToast
-          isOpen={settings.systemLanguage != i18next.resolvedLanguage}
-          message="We don't have your system language yet, switching back to English"
-          buttons={[
-            {
-              text: "OK",
-              role: "cancel",
-            },
-          ]}
-          position="top"
-          swipeGesture="vertical"
-          duration={5000}
-          animated={true}
-        ></IonToast>
         <IonToolbar>
           <IonButton
             id="reset-alert"
