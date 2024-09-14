@@ -165,6 +165,9 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
   }, [settings.language, settings.systemLanguage]);
 
   useEffect(() => {
+    if (settings.followSystemTheme) {
+      return;
+    }
     toggleDarkPalette(settings.darkModeActive);
   }, [settings.darkModeActive]);
 
