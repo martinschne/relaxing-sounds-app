@@ -54,7 +54,7 @@
       "header": "App",
       "label": {
         "language": "Language",
-        "theme": "Theme",
+        "darkMode": "Dark mode",
         "accent": "Accent"
       },
       "languageSelect": {

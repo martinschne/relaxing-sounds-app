@@ -12,7 +12,7 @@ import {
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import {
-  informationCircleOutline,
+  informationOutline,
   musicalNotesOutline,
   optionsOutline,
   waterOutline,
@@ -87,7 +87,7 @@ const App: React.FC = () => {
                   <IonLabel>{t("label.settings")}</IonLabel>
                 </IonTabButton>
                 <IonTabButton tab="about" href="/about">
-                  <IonIcon aria-hidden="true" icon={informationCircleOutline} />
+                  <IonIcon aria-hidden="true" icon={informationOutline} />
                   <IonLabel>{t("label.about")}</IonLabel>
                 </IonTabButton>
               </IonTabBar>

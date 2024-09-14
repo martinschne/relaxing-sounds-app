@@ -6,7 +6,8 @@ export interface Settings {
   duration: string;
   language: string;
   systemLanguage: string;
-  theme: string;
+  darkModeActive: boolean;
+  followSystemTheme: boolean;
   selectedSong: Track;
   selectedSound: Track;
 }

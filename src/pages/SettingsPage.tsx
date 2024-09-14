@@ -14,13 +14,14 @@ import {
   IonSelect,
   IonSelectOption,
   IonTitle,
+  IonToggle,
   IonToolbar,
 } from "@ionic/react";
 import VolumeSlider from "../components/VolumeSlider";
 import { useGlobalContext } from "../providers/GlobalContextProvider";
 import { SettingsKeys } from "../types";
 import { useTranslation } from "react-i18next";
-import { warning } from "ionicons/icons";
+import { lockClosed, lockOpen, warning } from "ionicons/icons";
 import i18next from "i18next";
 import { FALLBACK_LANGUAGE, SUPPORTED_LANGUAGES } from "../i18n";
 import FooterNote from "../components/FooterNote";
@@ -55,9 +56,22 @@ const SettingsPage: React.FC = () => {
     }
   };
 
-  const handleThemeChange = (event: CustomEvent) => {
-    const selectedTheme = event.detail.value;
-    saveSettings(SettingsKeys.THEME, selectedTheme);
+  const handleFollowSystemThemeToggle = (
+    event: React.MouseEvent<HTMLIonIconElement, MouseEvent>
+  ) => {
+    console.warn("Icon clicked !");
+    console.warn(
+      "followSystemTheme icon clicked, the negated value to save is: " +
+        !settings.followSystemTheme
+    );
+    const followSystemTheme = !settings.followSystemTheme;
+    saveSettings(SettingsKeys.FOLLOW_SYSTEM_THEME, followSystemTheme);
+  };
+
+  const handleDarkModeChange = (event: CustomEvent) => {
+    console.warn("Switcher clicked !");
+    const isDarkModeActive = event.detail.checked;
+    saveSettings(SettingsKeys.DARK_MODE_ACTIVE, isDarkModeActive);
   };
 
   const handleResetSettings = () => {
@@ -158,26 +172,34 @@ const SettingsPage: React.FC = () => {
               )}
             </IonSelect>
           </IonItem>
-          <IonItem color="light">
-            <IonSelect
-              label={t("settings.app.label.theme")}
+          <IonItem color="light" style={{ position: "relative" }}>
+            <IonToggle
+              disabled={settings.followSystemTheme}
+              checked={settings.darkModeActive}
+              onIonChange={handleDarkModeChange}
               justify="space-between"
-              aria-label={t("settings.app.label.theme")}
-              placeholder={t("settings.app.themeSelect.placeholder")}
-              interface="popover"
-              value={settings.theme}
-              onIonChange={handleThemeChange}
             >
-              <IonSelectOption value="system">
-                {t("settings.app.themeSelect.option.system")}
-              </IonSelectOption>
-              <IonSelectOption value="light">
-                {t("settings.app.themeSelect.option.light")}
-              </IonSelectOption>
-              <IonSelectOption value="dark">
-                {t("settings.app.themeSelect.option.dark")}
-              </IonSelectOption>
-            </IonSelect>
+              {t("settings.app.label.darkMode")}
+            </IonToggle>
+            <IonIcon
+              icon={settings.followSystemTheme ? lockClosed : lockOpen}
+              color="medium"
+              style={{
+                height: "27px",
+                width: "27px",
+                position: "absolute",
+                right: "75px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                paddingLeft: "15px",
+                paddingRight: "15px",
+                zIndex: 10,
+              }}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleFollowSystemThemeToggle(event);
+              }}
+            />
           </IonItem>
         </IonList>
         {!isSystemLanguageSupported && isSystemLanguageActive && (

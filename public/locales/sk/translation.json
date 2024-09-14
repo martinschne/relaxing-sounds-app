@@ -54,7 +54,7 @@
       "header": "Aplikácia",
       "label": {
         "language": "Jazyk",
-        "theme": "Téma",
+        "darkMode": "Tmavý režim",
         "accent": "Akcent"
       },
       "languageSelect": {

@@ -4,7 +4,6 @@ import {
   useContext,
   ReactNode,
   useEffect,
-  useCallback,
 } from "react";
 import { Settings, SettingsKeys } from "../types";
 import { PreferencesService } from "../services/PreferencesService";
@@ -26,13 +25,18 @@ export const GlobalContext = createContext<GlobalContextType | null>(null);
 export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const isDarkModeActive = window.matchMedia(
+    "(prefers-color-scheme: dark)"
+  ).matches;
+
   const DEFAULT_SETTINGS: Settings = {
     musicVolume: 1.0,
     soundVolume: 1.0,
     duration: "Infinity",
     language: "system",
     systemLanguage: i18next.resolvedLanguage ?? "en",
-    theme: "system",
+    darkModeActive: isDarkModeActive,
+    followSystemTheme: true,
     selectedSong: songs[0],
     selectedSound: sounds[0],
   };
@@ -61,7 +65,6 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const savePreferences = async () => {
-    console.log("Saved preferences: " + JSON.stringify(settings));
     await PreferencesService.savePreference("settings", settings);
   };
 
@@ -69,20 +72,13 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
     document.documentElement.classList.toggle("ion-palette-dark", shouldAdd);
   };
 
-  const changeSystemTheme = useCallback(
-    (event: { matches: boolean }) => {
-      const theme = settings.theme;
-      if (theme === "system") {
-        toggleDarkPalette(event.matches);
-      } else if (theme === "light") {
-        toggleDarkPalette(false);
-      } else if (theme === "dark") {
-        toggleDarkPalette(true);
-      }
-      saveSettings(SettingsKeys.THEME, theme);
-    },
-    [settings.theme]
-  );
+  const handleSystemThemeChange = (event: MediaQueryListEvent) => {
+    if (settings.followSystemTheme) {
+      let isDarkModeActive = event.matches;
+      toggleDarkPalette(isDarkModeActive);
+      saveSettings(SettingsKeys.DARK_MODE_ACTIVE, isDarkModeActive);
+    }
+  };
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -124,12 +120,33 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
       });
   }, []);
 
+  useEffect(() => {
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+    // Function to apply system's theme if followSystemTheme is true
+    const applySystemTheme = () => {
+      const isDarkModeActive = prefersDark.matches; // Check current system preference
+      toggleDarkPalette(isDarkModeActive); // Apply dark or light mode based on system
+      saveSettings(SettingsKeys.DARK_MODE_ACTIVE, isDarkModeActive); // Save new setting
+    };
+
+    if (settings.followSystemTheme) {
+      applySystemTheme();
+
+      // Add the event listener for system theme changes
+      prefersDark.addEventListener("change", handleSystemThemeChange);
+
+      // Clean up the event listener on component unmount
+      return () => {
+        prefersDark.removeEventListener("change", handleSystemThemeChange);
+      };
+    }
+  }, [settings.followSystemTheme]);
+
   // continue saving changed preferences after the initial preferences were loaded
   useEffect(() => {
     if (loadPreferencesComplete) {
-      savePreferences().then(() => {
-        console.log("$$ GCP settings saved: " + JSON.stringify(settings));
-      });
+      savePreferences();
     }
   }, [settings]);
 
@@ -148,25 +165,8 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
   }, [settings.language, settings.systemLanguage]);
 
   useEffect(() => {
-    // changeSystemTheme();
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
-    const theme = settings.theme;
-
-    if (theme === "system") {
-      toggleDarkPalette(prefersDark.matches);
-    } else if (theme === "light") {
-      toggleDarkPalette(false);
-    } else if (theme === "dark") {
-      toggleDarkPalette(true);
-    }
-
-    // Listen for changes to the prefers-color-scheme media query
-    prefersDark.addEventListener("change", changeSystemTheme);
-
-    return () => {
-      prefersDark.removeEventListener("change", changeSystemTheme);
-    };
-  }, [settings.theme, changeSystemTheme]);
+    toggleDarkPalette(settings.darkModeActive);
+  }, [settings.darkModeActive]);
 
   return (
     <GlobalContext.Provider

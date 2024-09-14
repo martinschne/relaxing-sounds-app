@@ -54,7 +54,7 @@
       "header": "App",
       "label": {
         "language": "Språk",
-        "theme": "Tema",
+        "darkMode": "Mörkt läge",
         "accent": "Accent"
       },
       "languageSelect": {

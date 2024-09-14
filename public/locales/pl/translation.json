@@ -54,7 +54,7 @@
       "header": "Aplikacja",
       "label": {
         "language": "Język",
-        "theme": "Motyw",
+        "darkMode": "Tryb ciemny",
         "accent": "Akcent"
       },
       "languageSelect": {

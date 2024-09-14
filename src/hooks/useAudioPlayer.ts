@@ -26,14 +26,14 @@ export const useAudioPlayer = (
   const [isInitialized, setIsInitialized] = useState<Boolean>(false);
   const [isPausedByUser, setIsPausedByUser] = useState<Boolean>(false);
   const [playBackProgress, setPlayBackProgress] = useState<number>(NO_PROGRESS);
-  const [remainingSeconds, setRemainingSeconds] = useState<number>(
-    getDuration()
-  );
 
-  // BEGIN Helper functions
-  function getDuration(): number {
+  const getDuration = (): number => {
     return Number(settings.duration);
-  }
+  };
+
+  const [remainingSeconds, setRemainingSeconds] = useState<number>(
+    getDuration() * 60
+  );
 
   const getVolume = (): number => {
     return settings[volumeTypeKey] as number;
@@ -42,7 +42,6 @@ export const useAudioPlayer = (
   const isDurationSet = () => {
     return getDuration() !== Infinity;
   };
-  // END
 
   const audioCleanup = () => {
     // do not clean up empty object
@@ -199,6 +198,15 @@ export const useAudioPlayer = (
       startProgress();
     }
   }, [track, settings.duration]);
+
+  // start/stop progress when playback starts/stop
+  useEffect(() => {
+    if (isPlaying) {
+      startProgress();
+    } else {
+      stopProgress();
+    }
+  }, [isPlaying]);
 
   // when duration time finished, pause audio and restart the progress
   useEffect(() => {
