@@ -16,6 +16,8 @@ PODS:
     - Capacitor
   - CapacitorShare (6.0.2):
     - Capacitor
+  - CapacitorSplashScreen (6.0.2):
+    - Capacitor
   - CapacitorStatusBar (6.0.1):
     - Capacitor
   - CordovaPlugins (6.1.2):
@@ -32,6 +34,7 @@ DEPENDENCIES:
   - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
   - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
   - "CapacitorShare (from `../../node_modules/@capacitor/share`)"
+  - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
   - CordovaPlugins (from `../capacitor-cordova-ios-plugins`)
   - CordovaPluginsResources (from `../capacitor-cordova-ios-plugins`)
@@ -55,6 +58,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/preferences"
   CapacitorShare:
     :path: "../../node_modules/@capacitor/share"
+  CapacitorSplashScreen:
+    :path: "../../node_modules/@capacitor/splash-screen"
   CapacitorStatusBar:
     :path: "../../node_modules/@capacitor/status-bar"
   CordovaPlugins:
@@ -72,10 +77,11 @@ SPEC CHECKSUMS:
   CapacitorKeyboard: 2700f9b18687be021e28b5a09b59eb151a46d5e0
   CapacitorPreferences: e8284bf740cf8c6d3f25409af3c01df87dfeb5a1
   CapacitorShare: 591ae4693d85686ceb590db8e8b44aa014ec6490
+  CapacitorSplashScreen: 250df9ef8014fac5c7c1fd231f0f8b1d8f0b5624
   CapacitorStatusBar: b81d4fb5d4e0064c712018071b3ab4b810b39a63
   CordovaPlugins: f5ad3ac1ce4b19fba8289baa8b4a37f6f5a0b79a
   CordovaPluginsResources: 0c211f770ed91763a179ebcd9b9346e120b70662
 
-PODFILE CHECKSUM: dd05abd06252c6027064c07f8ed56f91627db0be
+PODFILE CHECKSUM: 35c550333ffcceea801b2affefd6893f47cd3b05
 
 COCOAPODS: 1.15.2
