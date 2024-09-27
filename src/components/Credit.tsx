@@ -15,7 +15,7 @@ const Credit: React.FC<CreditProps> = ({ track }) => {
         <IonItem lines="none">
           <IonLabel>
             <h2>{t("creditsModal.label.title")}:</h2>
-            <IonText color="primary">{track.name}</IonText>
+            <IonText color="medium">{track.name}</IonText>
           </IonLabel>
         </IonItem>
         <IonItem lines="none">

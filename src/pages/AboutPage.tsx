@@ -10,8 +10,10 @@ import {
 import CreditsModal from "../components/CreditsModal";
 import { Trans, useTranslation } from "react-i18next";
 import FooterNote from "../components/FooterNote";
+import { useGlobalContext } from "../providers/GlobalContextProvider";
 
 const MorePage: React.FC = () => {
+  const { appName } = useGlobalContext();
   const { t } = useTranslation();
 
   return (
@@ -22,7 +24,7 @@ const MorePage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen className="ion-padding">
-        <h3>RelaxingSounds</h3>
+        <h3>{appName}</h3>
         <p>{t("about.appDescription")}</p>
 
         <h4>{t("about.tutorialHeader")}</h4>

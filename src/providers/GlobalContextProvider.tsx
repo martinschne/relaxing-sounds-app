@@ -11,10 +11,13 @@ import { songs } from "../data/songs";
 import { sounds } from "../data/sounds";
 import i18next from "i18next";
 import { Device } from "@capacitor/device";
+import { App } from "@capacitor/app";
+import { Capacitor } from "@capacitor/core";
 
 export type StateAction<T> = React.Dispatch<React.SetStateAction<T>>;
 
 interface GlobalContextType {
+  appName: string;
   settings: Settings;
   saveSettings: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   resetSettings: () => void;
@@ -43,6 +46,7 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
 
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const [loadPreferencesComplete, setLoadPreferencesComplete] = useState(false);
+  const [appName, setAppName] = useState(document.title); // fallbck for web
 
   const saveSettings = <K extends keyof Settings>(
     key: K,
@@ -171,9 +175,19 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
     toggleDarkPalette(settings.darkModeActive);
   }, [settings.darkModeActive]);
 
+  useEffect(() => {
+    // get name dynamically for native platform
+    if (Capacitor.isNativePlatform()) {
+      App.getInfo().then((info) => {
+        setAppName(info.name);
+      });
+    }
+  }, []);
+
   return (
     <GlobalContext.Provider
       value={{
+        appName,
         settings,
         saveSettings,
         resetSettings,
